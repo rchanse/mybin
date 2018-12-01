@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+x="abcd"
+echo ${#x}     # length of variable x
+
+
+getstr() {
+  echo -n  "enter a string "
+  read value
+  let n=${#value}      # length of input provided
+  return $n
+}
+
+
+getstr
+let getstr_ret=$?      #remember the value returned from function  getstr
+echo "....5....1....-....2....-....3"
+echo $value $getstr_ret

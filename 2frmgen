@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+echo -n "Enter desired input directory (or pwd):"
+read indir tail
+echo -n "Enter desired output directory (or pwd):"
+read outdir tail
+
+#outdir="/home/rchansen/temp1"
+#indir=pwd
+w1='#!/usr/bin/env bash'
+w2='# '
+w3='# wrapper to move files '
+w4='# '
+w5='my_2frm1='$indir'          # input directory '
+w6='my_2frm2='$outdir'          # output directory '
+w7='my_2frm3=$1             # member to move '
+w8='my_2frm4=$2             # prompt action '
+w9='2frm  $my_2frm1  $my_2frm2  $my_2frm3  $my_2frm4 '
+w10='#      indir      outdir     member     prompt '
+
+echo -n "Enter the name of desired exec "
+read outfile tail
+#outfile=/home/rchansen/temp1/trythis
+
+/bin/cat > $outfile <<EOF
+$w1
+$w2
+$w3
+$w4
+$w5
+$w6
+$w7
+$w8
+$w9
+$w10
+EOF
+
+chmod +x $outfile
+
+# the following gens the 'backout' of the above
+# infile and outfile are swapped  backout is $outfile_
+
+backfile=$outfile"_"
+
+# swap input and output files
+w5='my_2frm1='$outdir'          # input directory '
+w6='my_2frm2='$indir'          # output directory '
+
+/bin/cat > $backfile <<EOF
+$w1
+$w2
+$w3
+$w4
+$w5
+$w6
+$w7
+$w8
+$w9
+$w10
+EOF
+
+chmod +x $backfile
+
+

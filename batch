@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+echo "Sample make a bash file"
+
+cat > batch_sample << "EOF"
+line 1
+line 3 
+last line
+EOF
+
+cat << "EOF" > batch_sample2
+use EOF for end of file
+put in the lines you wand
+sending this to batch_sample2
+last line
+EOF
+

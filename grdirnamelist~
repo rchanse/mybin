@@ -1,0 +1,9 @@
+2frm:125:            touch $output_dir/$member              # insure dest exists
+2frm:133:        touch $output_dir/$member          # insure existence for copy
+2frm:155:            touch $output_dir/$member              # insure dest exists
+backmeup:24:echo touch $backuptar
+backmeup:25:touch $backuptar
+str_funct:17:    touch $2.de_bug
+tn:22:if [ "$2" == "touch" ] ; then 
+tn:23:  echo " touching   /home/$USER/tn/$1. "
+tn:25:  touch /home/$USER/tn/$1

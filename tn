@@ -1,0 +1,42 @@
+#!/bin/bash 	
+
+# use the default file
+if [ "$1" == "" ] ; then
+  echo "tn/mynotes (default) entered "`date` >> /home/$USER/tn/histlog
+  vim /home/$USER/tn/mynotes
+  exit 0
+fi
+
+if [ "$2" == "ls" ] ; then 
+  echo " Showing  /home/$USER/tn. "
+  ls /home/$USER/tn
+  exit 0
+fi
+
+if [ "$2" == "al" ] ; then 
+  echo " Showing  /home/$USER/tn. "
+  ls  -al /home/$USER/tn
+  exit 0
+fi
+
+if [ "$2" == "touch" ] ; then 
+  echo " touching   /home/$USER/tn/$1. "
+  echo "Touching   /home/$USER/tn/$1. " >> /home/$USER/tn/histlog
+  touch /home/$USER/tn/$1
+  ls  -al /home/$USER/tn/$1
+  exit 0
+fi
+
+showme=/home/$USER/tn/$1
+ 
+if [ -f  $showme ]; then
+  echo "tn/$1 entered "`date` >> /home/$USER/tn/histlog
+  vim $showme
+else
+  echo "***"
+  echo $showme  does not exist
+  echo "***"
+  exit 99
+fi
+
+exit 0

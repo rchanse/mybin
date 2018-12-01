@@ -1,0 +1,211 @@
+#!/bin/bash
+# de_bug=0
+
+. str_funct
+
+function copyit {
+  fromfile=$1
+  tofile=$2
+  infomsg=
+  echo Copying FROM: $fromfile   TO: $tofile
+
+  # fromfile must exist to go forward
+  if [ ! -f $fromfile ] ; then
+    infomsg="$fromfile does NOT exist -- leaving NOTHING done"
+    return 4
+  fi
+
+  if [ ! -f $tofile ] ; then
+    echo $tofile does not exist
+    echo -n "Continue and write into empty (y/n) > "
+    read answer
+    if [ ".$answer" == ".y" ] ; then
+      infomsg="$tofile is empty, Overwrite it."
+      cp -iv $fromfile $tofile
+      rc_code=$?
+      return  $rc_code
+    elif [ ".$answer" == ".n" ] ; then
+      infomsg="$tofile is empty , skip overwrite and leave NOTHING done"
+      return 7
+    else
+      infomsg="$tofile empty, prompt got bad reply "$answer"  only  y  or  n"
+      return 8
+    fi      
+  else
+  # echo $tofile exists
+    cp -iv $fromfile $tofile
+  fi
+}
+
+
+# parse call
+memname=$1
+dir1_num=$2
+dir2_num=$3
+
+# Cease if memname is null
+if [ ".$memname" == '.' ] ; then
+  msg="memname not given -- I quit"
+  showmsg 8
+  exit $? 
+fi
+
+# mark for prompt if $2 or $3 are null
+prompt="no"
+( is_null $dir1_num ) && prompt="yes"    # mark prompt if $2 null
+( is_null $dir2_num ) && prompt="yes"    # mark prompt if $3 null
+
+# mark for prompt if $2 or $3 non integer
+(! is_integer $dir1_num) && prompt="yes"
+(! is_integer $dir2_num) && prompt="yes"
+de_bugit " echo parm2 :$2:  parm3 :$3:  $prompt"
+
+# ready for the list of lib to be genned 
+#  make_a_list difflist            # build array from reading file difflist
+#  build the list by keying in list of names
+   make_a_list_elt[0]=/home/rchansen/.local/bin
+   make_a_list_elt[1]=/home/rchansen/bin
+   make_a_list_elt[2]=/home/rchansen/bin12oct16
+   make_a_list_elt[3]=/home/rchansen/bingit
+list_name="copy_dirs"         # remember initialization
+copyx $list_name                # create array named copy_dirs[.]
+let copy_count=${#copy_dirs[@]}
+if [ ".$prompt" = ".no" ] ; then
+  dir_lr[0]=$dir1_num
+  dir_lr[1]=$dir2_num
+  de_bugit  "echo ${dir_lr[0]} xx   ${dir_lr[1]}  "
+else
+  de_bugit "echo in else part"
+
+  let j=0
+  for t in "${copy_dirs[@]}" 
+    do
+      echo $j  $t  #i{copy_dirs[$cntr]}
+      let j=$j+1
+    done
+
+  echo  "'.' will use libs of the previous call ${dir_lr[0]} ${dir_lr[1]}"
+  echo -n "Enter required libs  two number from above list : "
+  read one two
+  if [ ".$one" == ".." ] ; then
+    dir_lr=( `cat "$list_name".last `)
+  else
+    dir_lr[0]=$one
+    dir_lr[1]=$two
+    de_bugit "echo :one:$one:two:$two:  show got vals"
+  fi
+fi
+
+# we are almost ready to check out   first verify the values
+# dir_lr[0] and [1]    are the non-null   integers   in desired range
+
+# these are not done in any sneaky or nested logic method   KISS  
+
+# check to make sure variable exist (NON-null)
+
+de_bugit "echo starting checks of index choices"
+
+if ( is_null ${dir_lr[0]} )  ; then
+  msg="dir_lr[0] is null - quiting."
+  showmsg 100
+  exit $?
+fi
+de_bugit "echo dir_lr 0 is non-null"
+if ( is_null ${dir_lr[1]} )  ; then
+  msg="dir_lr[1] is null - quiting."
+  showmsg 101
+  exit $?
+fi
+de_bugit "echo dir_lr 1 is non-null"
+
+# Verify the values are integers
+if ( ! is_integer ${dir_lr[0]} ) ; then
+  msg="dir_lr[0]  ${dir_lr[0]} is not an integer  -- quiting "
+  showmsg 102
+  exit $?
+fi
+de_bugit "echo dir_lr 0 is integer "
+
+if ( ! is_integer ${dir_lr[1]} ) ; then
+  msg="dir_lr[1]  ${dir_lr[1]} is not an integer  -- quiting "
+  showmsg 103
+  exit $?
+fi
+de_bugit "echo dir_lr 1 is integer "
+
+# insure the values are in the range of the array  of  copy_dirs
+
+de_bugit "echo ${dir_lr[0]}  $copy_count "
+if ( ! in_range0ton ${dir_lr[0]}  $copy_count ) ; then
+  msg="dir_lr[0]  ${dir_lr[0]} NOT between  0 and $copy_count -- quiting "
+  showmsg 104
+  exit $?
+fi
+de_bugit "echo dir_lr 0 is in range"
+
+de_bugit "echo ${dir_lr[1]}  $copy_count "
+if ( ! in_range0ton ${dir_lr[1]}  $copy_count ) ; then
+  msg="dir_lr[1]  ${dir_lr[1]} NOT between 0 and $copy_count -- quiting "
+  showmsg 105
+  exit $?
+fi
+de_bugit "echo dir_lr 1 is in range"
+  
+# Now check to see if the files exist 
+index0=${dir_lr[0]}
+index1=${dir_lr[1]}
+dir0=${copy_dirs[$index0]}
+dir1=${copy_dirs[$index1]}
+file0=$dir0"/"$memname
+file1=$dir1"/"$memname
+de_bugit "echo $index0 $index1 $dir0 $dir1 $file0 $file1"
+
+if [ -e $file0 ] ; then
+  de_bugit "echo $file0  EXISTs"
+else
+  msg="$file0 does not exist -- quiting"
+  showmsg 106
+  exit $?
+fi
+
+# No need to verify the TO file but is nice
+if [ -e $file1 ] ; then
+  de_bugit "echo $file1  EXISTs"
+else
+  msg="$file1 does not exist -- quiting"
+  showmsg 106
+  #  exit $?        #  but dont prevent
+fi
+
+# We have detrmined reqused files exist so we can move data
+# save directory indexes for . next time use
+# echo $index0 $index1 > copy_dirs.last
+echo $index0 $index1 > "$list_name".last
+
+de_bugit "echo now do the copy"
+
+from_file=$file0
+to_file=$file1
+
+
+de_bugit "echo invoke subrtn:copyit $from_file $to_file"
+copyit $from_file $to_file
+rc=$?
+echo Return code is $rc
+date >> $HOME/binmove.log
+loginfo="Copy "$from_file" "$to_file" RC="$rc
+echo $loginfo  >> $HOME/binmove.log
+if [ ".$infomsg" != "." ] ; then    # if there is info 
+  echo $infomsg     # show the terminal
+  echo $infomsg >> $HOME/binmove.log
+fi
+
+# remember  cp -iv  f1  f2  mean terminal can reply n and not copy
+# BUT the RC will STILL be zero   we diff the result and leave a
+# message if non zero
+diff $from_file $to_file > /dev/null     # don't show console
+diff_rc=$?
+if [ $diff_rc != 0 ] ; then
+  infomsg="$from_file $to_file not the same, may have responded no to cp -i cmd"
+  echo $infomsg 2>&1 | tee -a $HOME/binmove.log    # console and mod log
+fi

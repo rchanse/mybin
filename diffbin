@@ -1,0 +1,183 @@
+#!/bin/bash
+
+#  syntax   diffit  menname  directory1  directory
+
+list_name="diff_dirs"         # remember initialization
+
+. str_funct 
+
+# parse call
+memname=$1
+dir1_num=$2
+dir2_num=$3
+
+# Cease if memname is null
+if [ ".$memname" == '.' ] ; then
+  msg="memname not given -- I quit"
+  showmsg 8
+  exit $? 
+fi
+
+# mark for prompt if $2 or $3 are null
+prompt="no"
+( is_null $dir1_num ) && prompt="yes"    # mark prompt if $2 null
+( is_null $dir2_num ) && prompt="yes"    # mark prompt if $3 null
+
+# mark for prompt if $2 or $3 non integer
+(! is_integer $dir1_num) && prompt="yes"
+(! is_integer $dir2_num) && prompt="yes"
+de_bug_it " echo parm2 :$2:  parm3 :$3:  $prompt"
+
+# ready for the list of lib to be genned 
+
+#  make_a_list difflist            # build array from reading file difflist
+#  build the list by hard-coding  list of names
+#  the make_a_list function if you know the desired file exists
+
+   make_a_list_elt[0]=/home/rchansen/.local/bin
+   make_a_list_elt[1]=/home/rchansen/bin
+   make_a_list_elt[2]=/home/rchansen/bin12oct16
+   make_a_list_elt[3]=/home/rchansen/bingit
+
+# list_name="diff_dirs"         # remember initialization
+
+copyx $list_name                # create array named diff_dirs[.]
+if [ ".$prompt" = ".no" ] ; then
+    dir_lr[0]=$dir1_num
+    dir_lr[1]=$dir2_num
+    de_bug_it  "echo ${dir_lr[0]} xx   ${dir_lr[1]}  "
+else
+    de_bug_it "echo in else part"
+fi
+
+let diff_count=${#diff_dirs[@]}     # get size of array
+
+de_bug_it "echo ${diff_dirs[@]}"
+
+#de_bug_it "echo ${$list_name[@]}"
+de_bug_it "echo diff_count $diff_count"
+
+if [ ".$2" == ".." ] ; then
+  dir_lr=( `cat "$list_name".last ` )
+#   echo ${dir_lr[@]}     # whole list
+#    echo ${dir_lr[0]}     # first elt
+#    echo ${dir_lr[1]}     # second eltj
+  # skip the prompt and use last call number
+  prompt="no"       # kill the prompt request  
+fi
+
+# answer the prompt if necesary
+if [ ".$prompt" == ".yes" ] ; then
+  echo "The indicator of which libraries to use are required"
+  echo
+  let j=0
+  for t in "${diff_dirs[@]}" 
+   do
+    echo $j  $t  #i{diff_dirs[$cntr]}
+    let j=$j+1
+   done
+
+  echo "'.' will use libs of the previous call ${dir_lr[0]} ${dir_lr[1]}"
+  echo -n "Enter required libs  two number from above list : "
+  read one two
+  if [ ".$one" == ".." ] ; then
+    dir_lr=( `cat "$list_name".last `)
+  else
+    dir_lr[0]=$one
+    dir_lr[1]=$two
+    de_bug_it "echo :one:$one:two:$two:  show got vals"
+  fi
+fi
+# we are almost ready to check out   first verify the values
+# dir_lr[0] and [1]    are the non-null   integers   in desired range
+
+# these are not done in any sneaky or nested logic method   KISS  
+
+# check to make sure variable exist (NON-null)
+
+if ( is_null ${dir_lr[0]} )  ; then
+  msg="dir_lr[0] is null - quiting."
+  showmsg 100
+  exit $?
+fi
+if ( is_null ${dir_lr[1]} )  ; then
+  msg="dir_lr[1] is null - quiting."
+  showmsg 101
+  exit $?
+fi
+
+# Verify the values are integers
+if ( ! is_integer ${dir_lr[0]} ) ; then
+  msg="dir_lr[0]  ${dir_lr[0]} is not an integer  -- quiting "
+  showmsg 102
+  exit $?
+fi
+
+if ( ! is_integer ${dir_lr[1]} ) ; then
+  msg="dir_lr[1]  ${dir_lr[1]} is not an integer  -- quiting "
+  showmsg 103
+  exit $?
+fi
+
+# insure the values are in the range of the array  of  diff_dirs
+
+de_bug_it "echo ${dir_lr[0]}  $diff_count "
+if ( ! in_range0ton ${dir_lr[0]}  $diff_count ) ; then
+  msg="dir_lr[0]  ${dir_lr[0]} NOT between  0 and $diff_count -- quiting "
+  showmsg 104
+  exit $?
+fi
+
+de_bug_it "echo ${dir_lr[1]}  $diff_count "
+if ( ! in_range0ton ${dir_lr[1]}  $diff_count ) ; then
+  msg="dir_lr[1]  ${dir_lr[1]} NOT between 0 and $diff_count -- quiting "
+  showmsg 105
+  exit $?
+fi
+  
+# Now check to see if the files exist 
+index0=${dir_lr[0]}
+index1=${dir_lr[1]}
+dir0=${diff_dirs[$index0]}
+dir1=${diff_dirs[$index1]}
+file0=$dir0"/"$memname
+file1=$dir1"/"$memname
+de_bug_it "echo $index0 $index1 $dir0 $dir1 $file0 $file1"
+
+if [ -e $file0 ] ; then
+  de_bug_it "echo $file0  EXISTs"
+else
+  msg="$file0 does not exist -- quiting"
+  showmsg 106
+  exit $?
+fi
+if [ -e $file1 ] ; then
+  de_bug_it "echo $file1  EXISTs"
+else
+  msg="$file1 does not exist -- quiting"
+  showmsg 106
+  exit $?
+fi
+
+# We have detrmined reqused files exist so we can compare (diff)
+# save directory indexes for . next time use
+# echo $index0 $index1 > diff_dirs.last
+echo $index0 $index1 > "$list_name".last
+
+de_bug_it "echo now do the diff"
+diff_it  $file0  $file1
+diff_rc=$?
+
+if [ $diff_rc -eq 0 ] ; then
+  echo files match
+else
+  echo files do NOT match  return code was $diff_rc
+  echo -n "Do you want to see the output? (Y/y) other is No "
+  read answer
+  if [ ".$answer" == ".Y" ] || [ ".$answer" == ".y" ] ; then
+    vim ~/difflist
+    echo "Output was in ~/difflist"
+  fi
+fi
+exit 0
+

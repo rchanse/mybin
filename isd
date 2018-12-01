@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [ ".$1" == '.' ]; then
+  dir=$PWD
+else
+  dir=$1
+fi
+echo "Directory list: "$dir
+for f in $(ls $dir -a); do
+#   echo $f
+   if [ -d  $f ]; then
+     echo $f" is Directory" 
+#   else
+#     echo $f is a regular file
+  fi
+done

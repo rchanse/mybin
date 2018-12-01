@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if [ ".$1" == "." ]; then
+  echo ..syntax of filedump exec
+  echo ....filedump parm1 parm2 parm3
+  echo ......parm1 is filename    this dir 
+  echo ......parm2 is length to dump     null default to 256 
+  echo ......parm3 offset from file start     0 if null
+fi
+
+if [ ".$2" == "." ]; then
+  dumplen=256
+else
+  dumplen=$2
+fi
+if [ ".$3" == "." ]; then
+  dumpoffset=0
+else
+  dumpoffset=$3
+fi
+
+echo $1 $2 $3
+echo $1 $dumplen $dumpoffset
+if [ -f $1 ]; then
+  # see hex dump man page for parms
+  #  C format n length to dump   s offset from start of file
+  cat $1 | hexdump -C -n $dumplen -s $dumpoffset
+else
+  echo $1 does not exist
+
+fi

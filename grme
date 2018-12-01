@@ -1,0 +1,91 @@
+# this script will use the file                          
+# grep a string against the individual member of it
+
+NAMES_list=/home/$USER/bin/grmelist    # file name of list to process
+
+if [ ".$1" == "." ]; then
+echo " grme - grep  a list of names for a string  "
+echo " " 
+echo " the list is ===>> "$NAMES_list
+echo " "
+echo " grme parm1 parm2"
+echo "   parm1 - 0  enter the list of name via vim                     "
+echo "         - n (numeric) enter the n-t value in the list           "
+echo "         -     at line provided by parm2  (default 1 if null)    "
+echo "         - char-str   value to be grep-ed for                    "
+echo "         - rep  replace the names list by file in parm2          "
+echo "   parm2 - file name used with 'rep'"
+echo "         - show - echo info on grep/search in list"
+echo " "
+echo " hint use grme char to obtain  num of line and file  to vim +n file"
+exit
+fi
+
+
+# nl is the number of entries in list of names
+if [ -f $NAMES_list ]; then
+  nl=`wc $NAMES_list | awk '{print $1}'`  
+  if [ ".$debug" == ".TRUE" ]; then
+    echo $nl $NAMES_list
+  fi
+fi
+
+# use $1 vim to edit the list in question
+if [ ".$1" == ".vim" -o ".$1" == ".0" ]; then
+   vim $NAMES_list
+   exit
+fi
+
+# use $1 to refresh/reload grmelist 
+if [ ".$1" == ".rep" ]; then
+   cp $2 $NAMES_list
+   exit
+fi
+
+# function for checking if a value is an integer type value 
+#  found linuxquestion
+function is_integer() {
+  printf "%d" $1 > /dev/null 2>&1
+  return $?
+}
+
+# checking for an integer is in range  between 1 and nl
+function in_range() {
+  if [ $1 -ge 1 ] && [ $1 -le $nl ] ; then
+    return 0
+  else
+    return 1 
+  fi
+}
+
+if  is_integer $1; then                             # an integer ?
+  if in_range $1; then                              # in range   ?
+    thefile=`head -n$1 $NAMES_list  | tail -n1`     # select file to vim
+    offset=""  
+    echo "parm2 is >"$2"<"
+    if [ ".$2" == "." ]; then
+        offset=" "
+    elif  is_integer $2;then
+       offset="+"$2
+      fi
+    fi
+
+    vim $offset $thefile
+    echo $offset $thefile
+    exit                                            # out of exec
+  else
+    echo $1 is not in range 1 - $nl size of $NAMES_list
+  fi
+#fi
+
+# process the list
+let index=1
+  while [ $index -le $nl ]; do
+    thefile=`head -n$index $NAMES_list  | tail -n1`
+    grep -n $1 $thefile
+    grep_retcd=$?                # remember grep return code
+    if [ ".$grep_retcd" == ".0" ] || [ ".$2" == ".show" ]; then
+      echo $index   $thefile .... $grep_retcd
+    fi
+    let index=$index+1
+  done

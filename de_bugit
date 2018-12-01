@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# if file .de_bug exists then  append the date and $@ command
+
+if [ -e $HOME/.de_bug ] ; then
+  date | tee -a $HOME/.de_bug
+  echo cmd:$@ | tee -a $HOME/.de_bug
+  $@ | tee -a $HOME/.de_bug
+fi 
+

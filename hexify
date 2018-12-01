@@ -1,0 +1,151 @@
+#!/usr/bin/env python
+# global imports
+import sys, string
+
+char_cntr = 0
+line_cntr = 0
+# first the header   16 bytes in hex then its char
+ruler     = "   . .  . .  5 .  . .  . A  . .  . .  . F    ....5....A.....F"
+rule_under= "_____________________________________________________________"
+hex_lead = "| "
+char_lead = "   "
+hex_part = hex_lead
+char_part = char_lead
+
+
+
+def hexshow(x):          # convert char to hex display
+  # could replace hexshow(c) with  "%2x"%ord((output_string[i])) 
+  hex_digits = '0123456789ABCDEF'
+  hi  = ord(x) / 16
+  low = ord(x) % 16
+  return hex_digits[hi] + hex_digits[low]
+  
+# subrtn to receive a char and limit output to printable or blank
+def charshow(x):
+  print_most = string.letters + string.digits + string.punctuation
+  if x in print_most:    # string.printable - string.whitespace:
+    return x
+  else:
+    return " "
+
+def write_to_file(out_data):            # output a string to a file
+  out_data = out_data + chr(10)
+  f_out.write(out_data)
+
+def write_to_screen(out_data):          # output a string to the screen
+  print out_data
+
+def outit(out_data):                    # route to output subroutine
+  if how == 1:
+    write_to_screen(out_data)
+  elif how == 2:
+    write_to_file(out_data)
+  elif how == 3:
+    write_to_screen(out_data)
+    write_to_file(out_data)
+  else:
+    print how," is not a valid choice."
+    print "   1 - print to screen."
+    print "   2 - print to a file."
+    print "   3 - both screen and file output."
+    print "   I    Q U I T. "
+    exit
+
+# 1. determine input source  terminal or file
+# 2. gather the input
+# 3. determine output source   screen, file, or both
+# 4. produce the output
+
+
+# 1. determine input source  terminal or file
+output_string = ""
+ans_in = raw_input("Enter input source  1 - terminal  2 -file: ")
+if ans_in == "1":
+  input_method = "screen"
+elif ans_in == "2":
+  input_method = "file"
+else:
+  msg_exit1 = "Invalid input: " + ans_in + ", I Quit"
+  print msg_exit1
+  sys.exit(1)
+
+# 2. gather the input
+if input_method == "screen":
+  part_string = raw_input("Enter a string (CR to EOF): ")
+  while  len(part_string) > 0:
+    output_string += part_string
+    part_string = raw_input("Enter a string (CR to EOF): ")
+else:
+  input_filename = raw_input("Enter the file to hex-i-fy: ")
+  f_in = open(input_filename,"r")
+  output_string = f_in.read()
+  f_in.close()
+
+
+# 3. determine output source   screen, file, or both
+print                                      # spread out to read
+print "Enter the output destination. "
+ans_out = raw_input("1 - screen,  2 - File,  3 - Both: ")
+if ans_out == "1":
+  how = 1
+elif ans_out == "2" or ans_out == "3":
+  output_file_name = raw_input("Enter output file name: ")
+  f_out = open(output_file_name,"w")
+  how = int(ans_out)
+else:
+  msg_exit2 = "Invalid output dest: " + ans_out + ",I quit."
+  print msg_exit2
+  sys.exit(2) 
+
+# 4. produce the output
+thing_len = len(output_string)        # length if the  'thing' to hex-i-fy
+
+
+# print the title  
+len_title = string.center("length",8)
+ruler     = len_title + ruler
+outit(ruler)
+
+len_is = string.center(str(thing_len),8)
+rule_under = len_is + rule_under
+outit(rule_under)
+
+# print the data  16 bytes at a time.
+for i in range(thing_len):
+  if i % 2 == 1:
+    hex_part = hex_part + hexshow(output_string[i]) + " "
+    # could replace hexshow(c) with  "%2x"%ord((output_string[i])) 
+  else:
+    hex_part = hex_part + hexshow(output_string[i])
+  char_part = char_part + charshow(output_string[i])
+  char_cntr += 1
+  if char_cntr % 16 == 0:
+    # calculate the line numbers
+    hex_num = string.rjust(str(hex(line_cntr)),8)
+    dec_num = string.rjust(str(line_cntr),8)
+    line_cntr = line_cntr + 16        # prep for next line
+    print_line = hex_part + char_part
+    print_line = hex_num + print_line + dec_num
+    outit(print_line)
+    hex_part = hex_lead                # reset for next line
+    char_part = char_lead
+
+# if char_cntr % 16  is 0 the no short line to print
+# print char_cntr
+if char_cntr % 16 <> 0:
+  # calculate and add on needed  fill blanks  
+  hex_num = string.rjust(str(hex(line_cntr)),8)
+  dec_num = string.rjust(str(line_cntr),8)
+  
+  hex_fill_count = 42 - len(hex_part)
+  hex_part = hex_part + " " * hex_fill_count
+ 
+  char_fill_count = 16 - (char_cntr % 16)
+  short_line = hex_part + char_part + " " * char_fill_count
+
+  short_line = hex_num + short_line + dec_num
+  outit(short_line)
+
+if how <> 1:            #  an output file was opend,
+  f_out.close()         #   so be nice and close it

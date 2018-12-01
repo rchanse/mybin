@@ -1,0 +1,153 @@
+# list of functions
+
+setdebug() {
+# control debugging by existence/nonexistence of ~/.de_bug
+
+if [ -e ~/.de_bug ] ; then
+  de_bug=0     # set debugging on
+else
+  de_bug=1     # set debugging off (non-zero)
+fi 
+}
+
+
+debug_onoff() {
+# turn de_bug flag  on or off
+  if [ ".on" = ".$1" ] ; then
+    touch $2.de_bug
+  elif [ ".off" == ".$1" ] ; then
+    rm $2.de_bug
+  else
+    echo  debug_onoff :$1: means no change to $2.debug  
+  fi
+   
+list_name=$2         # remember initialization
+
+# control debugging by existence/nonexistence of a file (no code change)
+if [ -e "$list_name".debug ] ; then
+  de_bug=0     # set debugging on
+else
+  de_bug=1     # set debugging off (non-zero)
+fi 
+}
+
+de_bug_it() {  # pass this routine a executable cmd 
+  if [ ".$de_bug" == ".0" ] ; then
+    echo -n de_bug_it:
+    $@
+  fi 
+}
+
+
+rcmsg() {
+# input is a msg to report
+# if first value of msg is numeric  it become stripped and the return code
+# if first value of msg is not an integer  ret code is set to 99
+# a lead blank line for readability 
+
+# Examples 
+#  rcmsg 8 msg    ret code set 8  and  msg is output
+#  rcmsg This is a msg  will be echoed and ret code set 99
+
+  de_bug_it echo "Original msg:"$@
+  var1="yes"             # switch for first parm indicator
+  while (( $# )) ; do
+    hold1=$1
+    if [ ".$var1" == ".yes" ] ; then
+      printf "%d" "$hold1" > /dev/null 2>&1  # like is_interger funct
+      print_rc=$?
+      de_bug_it echo print_rc $print_rc
+      if [ ".$print_rc" == ".0" ] ; then
+        let ret_code=$hold1
+      else
+        let ret_code=99
+        echo -n $1" "
+      fi
+      var1="no"         # set  switch to indicate next parms not first
+    else
+      echo -n $hold1" "
+    fi
+    shift
+  done
+  echo                   # line return only flush for next echo
+  return $ret_code
+}
+
+function is_integer() {
+# checking for an integer type value  found linuxquestion
+  printf "%d" $1 > /dev/null 2>&1
+  return $?
+}
+
+function is_null() {
+# determine if a value is null  0   or  non-null  1
+  if [ ".$1" == "." ] ; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+
+make_a_list() {
+# make_a_list : read a file and create an array from it
+# input one parm - name of the file to read
+# create an array  make_a_list_elt[0..n]
+
+listname=(`cat "$1"`)
+
+let i=0
+for t in "${listname[@]}"
+  do
+  # echo $t  ${listname[$i]}  $i
+   make_a_list_elt[$i]=$t
+   let i=$i+1
+  done
+}
+
+copy() #@ Copy array to new array
+{      #@ USAGE: copy arrayname1 arrayname2
+  local a1=${1:?} a2=${2:-copy}
+  eval "$a2=( \"\${$a1[@]}\" )"
+}
+
+copyx() #@ Copy array to new array
+{      #@ USAGE: copy arrayname1 arrayname2
+  local a1=${make_a_list-elt:?} a2=${1:-copy}
+  eval "$a2=( \"\${make_a_list_elt[@]}\" )"
+}
+
+function in_range0ton() {
+# checking for an integer is in range  between 0 and n-1 
+  let n=$2-1
+  if [ $1 -ge 0 ] && [ $1 -le $n ] ; then
+    return 0
+  else
+    return 1 
+  fi
+}     # in_range0ton variable     0 yes    1 no
+
+function diff_it  {
+# Actually do the diff comparison
+  echo 
+  echo Comparing  $1  $2 
+  echo "Comparing  $1  $2" > ~/difflist
+  diff $1 $2 >> ~/difflist
+  diff_rc=$?
+  return $diff_rc
+}
+
+showmsg() {
+# show a message with a leading blank line , return 
+  echo
+  echo $msg                # msg is variable in calling pgm
+  if is_integer $1 ; then
+    return $1
+  else
+    echo "NONzero return code :"$1": was passed.  Will return 0"
+    return 0
+  fi
+}
+
+# end list of functions
+

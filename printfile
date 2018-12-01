@@ -1,0 +1,9 @@
+#!/bin/bash
+
+#  Fri 06 Feb 2015 10:37:24 PM CST
+# got the runfile and put it in ~/Downloads/HPLIP_systems/
+# each time you upgrade HPLIP systems this must be edited
+
+#/home/rchansen/Downloads/HPLIP_systems/hplip-3.14.10/print.py  $1
+#/home/rchansen/Downloads/hplip-3.15.7/print.py  $1
+/home/rchansen/Downloads/hplip-3.16.7/print.py  $1

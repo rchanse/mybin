@@ -1,0 +1,40 @@
+#!/bin/bash
+
+cmd="tar "
+
+cmd=$cmd" -cvzf "     # add switches
+
+bkupdate=`date +%d%b%y`
+Iam=`hostname`            # back-tic to get hostname
+
+backupfile=$HOME"/"$Iam"_backup"$bkupdate 
+backuptar=$backupfile".tar.gz"
+
+cmd=$cmd$backuptar
+
+# now the --excludes
+cmd=$cmd" --exclude="$HOME"/Downloads"
+cmd=$cmd" --exclude="$HOME"/.mozilla"
+cmd=$cmd" --exclude="$HOME"/.mozilla-thunderbird"
+
+cmd=$cmd" --exclude="$backuptar     # so as not to double count or loop on self
+
+cmd=$cmd" "$HOME"/  "               # directory to backup
+
+echo touch $backuptar
+touch $backuptar
+
+
+echo  "$cmd"
+echo
+echo  "Should the above command be executed ?  y/n"
+read answer
+if [ "$answer" == "y" ]; then
+
+  backupcmdfile=$backupfile"create_cmd"
+  echo "$cmd" > $backupcmdfile
+
+  # $cmd 
+else
+  echo "response "$answer" is not  'y'   nothing done."
+fi

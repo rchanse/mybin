@@ -1,0 +1,399 @@
+#!/bin/bash    
+# Fri 18 Mar 2016 05:08:48 PM CDT
+
+
+# set debugging
+debug=999   # default is off  change would be environment var doitdbug
+            # doitdbug can be set by hand or  . doit debug on|off
+if [ ".$doitdbug" == ".on" ]; then 
+  debug=1        # set 1 to show debug echos
+fi
+if [ ".$doitdbug" == ".off" ]; then 
+  debug=0        # set 0 to NOshow debug echos
+fi
+
+# functions
+
+# checking for an integer type value  found linuxquestion
+# is_integer looks at first passed parm
+#    return 0 if integer   nonzero if not
+#  may not be fool proof  is_integer "1 a 1" is answered yes
+
+function is_integer() {
+  printf "%d" $1 > /dev/null 2>&1
+  return $?
+}
+
+# obtain number of line of file passed in
+function file_size() {
+  nl=`wc $1 | awk '{print $1}'`  
+  }
+
+function in_range() {
+  # passed parms  1 - # in question  2 - upper bound (size of file)
+  if [ $1 -ge 1 ] && [ $1 -le $2 ]; then
+      return 0
+  else
+      return 1
+  fi
+  }
+# obtain line number in file (parm1) of searched (parm2)
+function which_line() {
+    what_file=$1        # passed parm 1 the file to search line by line
+    what_search=$2      # passed parm 2  text of line to search for
+
+    file_size $1
+    f_size=$nl
+     if [ $debug -eq 1 ]; then echo size of $1 os $f_size ; fi
+    cntr=1
+    found="no"
+    while [ $cntr -le $f_size ] && [ $found == "no" ]; do
+       filename=`head -n$cntr $what_file | tail -n1`
+       if [ $debug -eq 1 ]; then echo $cntr $filename ; fi
+       if [ ".$filename" == ".$what_search" ]; then
+          echo "RCHmsg02  $what_search found at entry number $cntr." 
+          found="yes"
+       else   
+          let cntr=$cntr+1 
+       fi
+    done
+
+    if [ $found == "no" ]; then
+      echo $what_search  NOT found in $what_file      
+    fi  
+
+}
+
+function helpdoc {
+# echo ".12345678901234567890123456789012345678901234567890123456789012345678901234567."
+  echo ". syntax:  $0  parm1 parm2 parm3                        "
+  echo ".                                                                             ."
+  echo ".  parm1      - Null/help  show help screen                                   ."
+  echo ".  d/dir      - create doitdir (this dir name)  edit with vd/vdir             ."
+  echo ".  f/files    - create doitfiles (files in the dir) edit with vf/vfiles       ."
+  echo ".  ren/rename - rename a.out to parm2                                         ."
+  echo ".  w/who      - determine  doitfiles # of parm3                               ."
+  echo ".  debug      - toggle debugging echo stmts (starts at off)                   ."
+  echo ".                                                                             ."
+  echo ".  parm2  is acting on #file provided parm1                                   ."
+  echo ".   Null - gcc -Wall #file                   v/vim - vim #file                ."
+  echo ".    .   - execute a.out                     / w   - show name of #file       ."
+  echo ".    l   - adding  -lparm3                   x     - execute parm3            ."
+  echo ".   -c   - gcc -o                            bak   - create #file.bak         ."
+  echo ".    c   - cat the #file                     bakrm - rm #file.bak             ."
+  echo ".    t   - a.out 2>&1 | tee rchansen.out     bakdiff - diff #file #file.bak   ."
+  echo ".   lsal - ls -al #file                      bakorig - create #file.orig      ."
+  echo ".   -o/o - gcc -o parm3 #file                d       - gcc -DDEBUG            ."
+  echo ".                                                                             ."
+  echo ".                                                                             ."
+# echo ".                                                                             ."
+# echo ".                                                                             ."
+# echo ".                                                                             ."
+# echo ".12345678901234567890123456789012345678901234567890123456789012345678901234567."
+  return 0
+  } 
+
+#
+# Here is the start of the main program
+#
+
+# first handle the null parm
+if [ ".$1" == "." ]; then
+   type=111      # make not 0
+   parm1="help"
+else   
+   parm1=$1
+   is_integer $parm1 
+   type=$?
+fi   
+ 
+if [ $debug -eq 1 ]; then echo parm1  $parm1 ; fi
+
+if [ $debug -eq 1 ]; then echo type  $type  ; fi
+case $type in
+ 0 )
+     ndoitdir=doitdir
+     qual=`head -n 1 $ndoitdir`
+     # qual=`head -n 1 /home/rchansen/blp/cstuff/rchcode/doitdir`
+     
+     if [ $debug -eq 1 ]; then echo qual $qual ; fi
+     
+     slash="/"
+     
+     ndoitfiles=doitfiles
+     file_size doitfiles
+     files_size=$nl
+     if in_range $parm1 $files_size; then  
+        mem=`head -n$parm1 $ndoitfiles| tail -n1`
+     else
+        echo "RCHmsg05a $parm1 is lt 1 or gt $files_size "
+        echo "RCHmsg05b Size of pwd/doitfiles is $files_size "
+        exit
+     fi
+     
+     thefile=$qual$slash$mem
+     
+     if [ $debug -eq 1 ]; then
+      echo $qual $mem
+      echo "thefile = "$thefile
+     fi        
+
+     # now that we have the file in question  use parm2 $2 to act on it
+  
+   parm2=$2
+     if [ ".$parm2" == "." ]; then
+         parm2="NULL"
+     fi 
+     if [ $debug -eq 1 ]; then echo parm2 $parm2 ; fi
+   case "$parm2" in
+   "NULL" )
+             echo "RCHmsg NULL   gcc -Wall $thefile    using $parm1"
+             # gcc $thefile        #  previous
+             gcc -Wall  $thefile
+             if [ $debug -eq 1 ]; then echo gcc -Wall $thefile ; fi
+             ;;
+   "d" )
+             gcc -Wall  $thefile  -DDEBUG
+             if [ $debug -eq 1 ]; then echo gcc -Wall $thefile -DDEBUG; fi
+             ;;
+   "l" )
+             echo "RCHmsg NULL   gcc $thefile  with link value "
+             echo "gcc -Wall $thefile  -l$3 "
+             gcc -Wall $thefile  -l$3 
+             if [ $debug -eq 1 ]; then echo gcc -Wall $thefile -lPARM3 ; fi
+             ;;
+   "." )
+             echo "RCHmsg .   Invoking ./a.out "
+                ./a.out
+             if [ $debug -eq 1 ]; then echo invoke a.out ; fi
+            ;;
+   "-c" )   # build only object
+             gcc -c -Wall $thefile
+             if [ $debug -eq 1 ]; then echo gcc -c -Wall $thefile ; fi
+             ;;
+   "c" )
+             cat $thefile
+             if [ $debug -eq 1 ]; then echo cat $thefile ; fi
+             ;;
+   "cat" )
+             if [ $debug -eq 1 ]; then echo cat $thefile ; fi
+             cat $thefile
+             ;;
+   "chg" )   # not on help
+             echo "  Sun 06 Mar 2016 09:27:32 PM CST"
+             echo " <Fri 18 Mar 2016 06:37:36 PM CD  "
+             echo "  add -c option build simple object"
+             echo "  "
+             echo "  "
+             echo "  "
+             echo "  "
+             echo "  "
+             echo "  "
+             ;;
+   "t" )
+             if [ $debug -eq 1 ]; then echo a.out then vim; fi
+             ./a.out 2>&1 | tee rchansen.out
+             vim rchansen.out
+             ;;
+   "e" )
+             if [ $debug -eq 1 ]; then echo gcc then less ; fi
+             gcc -Wall $thefile 2>&1 | less
+             ;;
+   "lsal" )
+             ls -al $thefile
+             ;;
+   "-o" )
+             echo reaim to option o
+             doit $1 o $3
+             ;;
+   "o" )
+             if [ $debug -eq 1 ]; then echo -o $3 ; fi
+             if [ ".$3" == "." ]; then    # null name for output
+                echo "RCHmsg06  ERROR option o has NO parm3 target for -o "
+                     exit
+             else
+                     echo "gcc -o $3 $thefile"
+                     gcc -o $3 -Wall $thefile
+                     ls -al $3
+             fi
+             ;;
+   "v" )
+             if [ $debug -eq 1 ]; then echo vim $thefile ; fi
+             vim $thefile
+             ;;
+   "vim" )
+             if [ $debug -eq 1 ]; then echo vim $thefile ; fi
+             vim $thefile
+             ;;
+   "/" )
+             if [ $debug -eq 1 ]; then echo  $parm1 $thefile ; fi
+             echo number $parm1 in doitfiles is $mem
+             echo action will be on $thefile
+             ;;
+   "w" )
+             if [ $debug -eq 1 ]; then echo  $parm1 $thefile ; fi
+             echo number $parm1 in doitfiles is $mem
+             echo action will be on $thefile
+	     ;;
+   "x" ) 
+             if [ $debug -eq 1 ]; then echo exec by name; fi
+             if [ ".$3" == "." ]; then    # null name for output
+               echo "RCHmsg07  ERROR option x has NO parm3  to execute" 
+                     exit
+             else
+                     $qual$slash$3
+             fi
+             ;;
+   "bak" )  # create a backup  filename.bak
+          backname=$thefile.bak
+          echo $backname
+          if [ -f $backname ]; then
+              echo "$thefile.bak exists, NOT available for backup, I quit."
+          else
+              date > $thefile.bak
+              cat  $thefile >>  $thefile.bak
+              echo "Backup $thefile.bak created"
+          fi
+          ;;
+   "bakrm" )   # remove  filename.bak
+         rm -i $thefile.bak
+          ;;
+   "bakdiff" )  # compare  filename and filename.bak
+          backname=$thefile.bak
+          echo $backname
+          if [ -f $backname ]; then
+              diff $thefile $backname
+          else
+              echo "Backup $backname does NOT exist  no diff"
+          fi
+          ;;         
+   "bakorig" )
+          backorig=$thefile.orig
+          # echo $backorig
+          if [ -f $backorig ]; then
+             echo "Backup $backorig does exist "
+             cmp $thefile $backorig
+             if [ ".$?" == ".0" ]; then
+                echo "$thefile  AND"
+                echo "$backorig    are the SAME"
+             else   
+                 echo "thefile  AND"
+                 echo "thefile     are DIFFERENT  (diff bdlow)"
+                 diff $thefile $backorig
+             fi   
+          else
+              echo "Backup $backorig created "
+              cp $thefile $backorig
+          fi
+          ;;
+   * )
+             echo "RCHmsg00 >>.$parm2.<<  is an Unknown action for parm2."
+   esac
+ ;;   
+ * ) 
+  # parm1=$1
+  if [ $debug -eq 1 ]; then echo $parm1; fi
+  case $parm1 in
+  "a" )   # sample way to not have to repeat code.
+          $0 "b"
+          ;;
+  "b" )
+          echo a or b
+          ;;
+  "dir" )
+          $0 "d"
+          ;;
+  "d" )
+          pwd > doitdir
+          ;;
+  "debug" )
+          echo -n "RCHmsg10  At entrance debug is "
+          if [ $debug -eq 1 ]; then
+             echo "ON"
+          elif [ $debug -eq 0 ]; then
+             echo "OFF"
+          else echo "Default Off"
+          echo "RCHmsg10a  Control by  . doit debug  on|off "
+          fi
+          #echo "REMEMBER this option must be 'sourced'"
+          #echo "command should be  . doit debug  on|off|show"
+          parm2=$2
+          if [ ".$parm2" == ".on" ]; then
+             export doitdbug=on
+             debug=1
+             echo "RCHmsg13 (on) debug set on"
+          elif [ ".$parm2" == ".off" ]; then
+             export doitdbug=off
+             debug=0
+             echo "RCHmsg13 (off) debug set off"
+          else
+             echo " "     
+          fi
+          echo "REMEMBER if cmd NOT dotted/dsourced - change LOST"
+          
+          echo -n "RCHmsg11  At exit debug is "
+          if [ $debug -eq 1 ]; then
+             echo "ON"
+          elif [ $debug -eq 0 ]; then
+             echo "OFF"
+          else echo "Default Off"
+          echo "RCHmsg11a  Control by  . doit debug  on|off "
+           fi
+ 
+          #echo Currently debug is $doitdbug
+          ;;
+  "files" )
+          ls > doitfiles    
+          ;;
+  "f"    )
+          ls > doitfiles    
+          ;;
+  "help" )
+          helpdoc 
+          ;;
+  "vfiles" )
+          vim doitfiles
+          ;;
+  "ren")      # rename  a.out  
+          if [ -f $2 ]; then
+            echo "$2 exists  retype or rm by hand "
+            echo "  a.out UNrenamed) "
+            echo "  $2 is UNchanaged."
+          else
+            mv a.out $2
+            if [ ".$?" == ".0" ]; then
+              echo "... a.out mv/renamed to $2."
+            else
+              echo "...  mv/rename a.out to $2 FAILED."
+            fi
+          fi
+          ;;
+  "rename")
+          echo "Reaiming  rename  to  ren. "
+          doit ren $2
+          ;;
+  "vf"   )
+          vim doitfiles
+          ;;
+  "vdir" )
+          vim doitdir
+          ;;
+  "vd"   )
+          vim doitdir
+          ;;
+  "w"   )
+          echo REaiming to  $0 who $2 
+          $0 who $2
+          ;;
+  "who" )   # given mem name  show the number
+          search=$2      # search file name from calling parm2
+          file_size doitfiles
+          files_size=$nl
+          if [ $debug -eq 1 ]; then echo doitfile size $files_size; fi
+          which_line doitfiles $search 
+          ;;
+           
+  * )
+         echo "RCHmsg01 .$parm1. is unknown for parm1."
+  esac        
+esac         

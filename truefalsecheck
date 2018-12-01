@@ -1,0 +1,76 @@
+#!/bin/bash
+
+
+# true returns 0 
+true
+ans=$?
+echo "true cmd" $ans
+
+# false returns 1 (nonzero)
+false
+ans=$?
+echo "false cmd " $ans
+
+
+# `true` is null FALSE
+echo "==>"`true`"<=="
+if  [ `true` ] ; then
+  echo TRUE
+else
+  echo FALSE
+fi
+
+# `false` is null false
+echo "==>"`false`"<=="
+if  [ `false` ] ; then
+  echo TRUE
+else
+  echo FALSE
+fi
+
+
+echo
+echo passed parm1 test ">"$1"<"  NOTE: To get true enter string 'filledin'
+
+parm1=$1 
+if  [ ".$parm1" == ".filledin" ] ; then
+  echo TRUE
+  echo "passed parm1 is ==>"$1"<=="TRUE
+else
+  echo FALSE
+  echo "passed parm1 is ==>"$1"<=="FALSE
+fi
+
+# numeric tests  DEPEND on the test
+
+# checking against 0
+echo checking against 0 zero
+let x=0
+if [ $x -eq 0 ] ; then
+  echo $x  TRUE
+else
+  echo $x  FALSE
+fi
+let x=1
+if [ $x -eq 0 ] ; then
+  echo $x  TRUE
+else
+  echo $x  FALSE
+fi
+
+# checking against 0
+echo checking against 1
+let x=0
+if [ $x -eq 1 ] ; then
+  echo $x  TRUE
+else
+  echo $x  FALSE
+fi
+let x=1
+if [ $x -eq 1 ] ; then
+  echo $x  TRUE
+else
+  echo $x  FALSE
+fi
+
+echo There are many other bash type checks  see  man bash

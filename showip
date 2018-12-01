@@ -1,0 +1,3 @@
+#!/bin/bash
+#  ip addr show eno1 | grep inet | awk '{ print $2; }' | sed 's/\/.*$//'
+ip addr show wlan0  | grep inet | awk '{ print $2; }' | sed 's/\/.*$//'

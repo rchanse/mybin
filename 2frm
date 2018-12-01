@@ -1,0 +1,216 @@
+#!/usr/bin/env bash
+
+# real call sequence parms (4)   input-dir output-dir memname handle
+# directory names must be explicit and exist
+# memname must exist
+# handle  - . for noprompt   r - rename output member.
+
+
+let  debug=1                 # debug set off  ( truth is  let debug=0
+
+# set variable from function call
+input_dir=$1
+if [ ".$input_dir" == ".pwd" ]; then  # allow that input_dir is $PDW
+    input_dir=$PWD
+    pwd1=" *** as pwd"
+else
+    pwd1=''
+fi    
+output_dir=$2
+if [ ".$output_dir" == ".pwd" ]; then  # allow that output_dir is $PDW
+    output_dir=$PWD
+    pwd2=" *** as pwd "
+else
+    pwd2=""
+fi    
+member=$3 
+prompt=$4 
+if [ ".$prompt" == "." ]; then       # reset prompt null to 'prompt'
+    prompt="prompt"
+fi
+if [ ".$prompt" == ".e" ]; then
+    prompt="="
+fi    
+if [ ".$prompt" == ".d" ]; then
+    prompt="diff"
+fi  
+
+function nop() {     # a NO-OP function to make code readable
+  return 0
+}  
+ 
+
+# check input_directory  provided and valid	
+if [ "." == ".$input_dir" ]; then                     # input-dir provide
+    echo "parm1 input directory not provided, I quit"
+    exit 1
+fi
+
+if [ -d $input_dir ]; then                            #input-dir a dir?
+    nop
+else
+    echo "parm1 is NOT an existing directory "
+    exit 2
+fi
+
+# check output_directory  provided and valid	
+if [ "." == ".$output_dir" ]; then                     # output-dir provide
+
+    echo "parm2 output directory not provided, I quit"
+    exit 1
+fi
+
+if [ -d $output_dir ]; then                            #output-dir a dir?
+    nop
+else
+    echo "parm2 is NOT an existing directory "
+    exit 2
+fi
+
+# Insure input and output directories differ
+
+
+echo " input directory is : $input_dir$pwd1"
+echo "output directory is : $output_dir$pwd2"
+
+if [ ".$input_dir" == ".$output_dir" ]; then
+    echo "Cannot have same input and output dirs"
+    exit
+fi    
+ 
+if [ ".$member" == "." ]; then            # null give help info
+    echo "                                                          "
+    echo " fnt  parm1 parm2                                         "
+    echo "                                                          "
+    echo "  function - move a file                                  "
+    echo "              from dir : $input_dir $pwd1"
+    echo "               to  dir : $output_dir $pwd2"
+    echo "                                                          "
+    echo "  parm1 - filename to be moved (if it exists)             "
+    echo "  parm2 - '.' excutes without a prompt (else ignored)     "
+    echo "          'r' to rename output member                     "
+    echo "          '=' or "e" tell if equal or not                 "
+    echo "          'd' or 'diff' show me the diff of files         "
+    echo "          'rm' remove generates  rm -i input_dir/filename "
+    echo "                                                          "
+    echo "  NOTE: can write wrappers for 2xx where is first parm    "
+    echo "        is the explicit outfile directory:                "
+    echo "    e.g.  2bt file  ==  2xx /home/rchansen/bintest file   "
+    echo "                                                          "
+    exit 3
+fi
+
+in_filename=$input_dir/$member
+
+if [ -f $in_filename ]; then             # filename exists ??     
+   
+  if [ $debug = 0 ]; then echo "case work prompt" ">>"$prompt"<<" ; fi                            
+  case "$prompt" in
+
+  "prompt" )
+       if [ $debug = 0 ];then echo "prompt me" ; fi
+       
+       echo ' '                      # blank line for readability
+
+        if [ -f $output_dir/$member ]; then
+            echo "* * *  "$output_dir/$member" * * EXISTs"
+        else
+            echo "* * *  "$output_dir/$member" * * does NOT exist (yet)"
+        fi
+
+        answer="no"                        # default no copy
+        echo -n "Do you want to copy/overlay the file ?? (y) "
+        read answer tail
+        if [ ".$answer" == ".y" ]; then
+            touch $output_dir/$member              # insure dest exists
+            cp -av $in_filename $output_dir/$member
+        else
+            echo "Answer not 'y', nothing done"
+	fi    
+  ;;
+  "." )
+        if [ $debug = 0 ]; then echo "force write" ; fi
+        touch $output_dir/$member          # insure existence for copy
+        cp -av $in_filename $output_dir/$member    # copy
+  ;;
+  "r" ) 
+        if [ $debug = 0 ]; then echo "rename prompt" ; fi
+        newname=""
+	echo " "
+	echo -n "Enter the new output_dir member : "
+	read answer tail
+	member=$answer
+
+	echo ' '                      # blank line for readability
+        if [ -f $output_dir/$member ]; then
+            echo "* * *  "$output_dir/$member" * * EXISTs"
+        else
+            echo "* * *  "$output_dir/$member" * * does NOT exist (yet)"
+        fi
+
+        answer="no"                        # default no copy
+        echo -n "Do you want to copy/overlay the file ?? (y) "
+        read answer tail
+        if [ ".$answer" == ".y" ]; then
+            touch $output_dir/$member              # insure dest exists
+        echo    cp -av $in_filename $output_dir/$member
+        else
+            echo "Answer not 'y', nothing done"
+	fi   
+  ;;
+  "=" )
+        if [ $debug = 0 ]; then echo "files equal"; fi
+	if [ -f $output_dir/$member ]; then
+	    equal_comp="are NOT the same"
+	    cmp $in_filename  $output_dir/$member
+	    if [ $? == 0 ]; then
+	        equal_comp="are the same"
+	    fi
+	    echo $in_filename" and "$output_dir/$member" "$equal_comp
+	else
+	    echo $output_dir/$member" does NOT exist,  so UNequal" 
+	fi
+  ;;
+  "diff" )
+        if [ $debug = 0 ]; then echo "showme the diff" ; fi 
+	if [ -f $output_dir/$member ]; then
+	    diff $in_filename  $output_dir/$member
+	else
+	    echo $output_dir/$member" does NOT exist,  so can't diff" 
+	fi
+
+  ;;
+  "rm" )
+        if [ $debug = 0 ]; then echo 'generate remove code';fi
+      rm -i $in_filename
+  ;;  
+  * )     # default unknown
+    echo "Say what"
+  ;;
+  esac
+else
+    echo "Input_dir/file "$in_filename" does NOT exist"
+fi
+       
+if [ $debug = 0 ]; then
+    echo $input_dir $output_dir $member $prompt  "the end"
+fi
+exit 0
+
+# below is a sample wrapper model
+#!/usr/bin/env bash
+
+# wrapper for sending files to 
+
+#                                           # user full name not ~/ type
+my_2frm_parm1="/home/rchansen/temp1"        # input_dir   or  pwd        
+my_2frm_parm2="/home/rchansen/temp2"        # output_dir               e
+my_2frm_parm3=$1                            # member to move
+my_2frm_parm4=$2                            # prompt action
+
+#echo "2frm " $my_2frm_parm1 $my_2frm_parm2 $my_2frmx_parm3 $my_2frm_parm4
+2frm  $my_2frm_parm1 $my_2frm_parm2 $my_2frm_parm3 $my_2frm_parm4
+
+#    inputfile dir   outfile dir    file-to-send     for noprompt
+#    input_dir       output_dir     member           prompt
+

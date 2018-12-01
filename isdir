@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+if [ ".$1" == "." ]; then    # no parm  
+  dir=$PWD                   #  default to current working directory
+else
+  dir=$1                     # use it if provide
+fi
+
+slash='/'
+long_dir=""
+let max_dir_len=0
+for f in $(ls -a $dir); do
+  f1=$dir$slash$f     # build fully qualified name
+  if [ -d $f1 ];then  # is a directory
+    let l=${#f}
+#   echo $f $l
+    if [ $l -gt $max_dir_len ]; then
+      long_dir=$f
+      let max_dir_len=$l
+    fi
+#   echo "longest dir len/name: "$max_dir_len"/"$long_dir
+  fi
+done
+echo "longest dir len/name: "$max_dir_len"/"$long_dir
+
+echo "Directories for :"$dir
+let col_size=$max_dir_len+3
+pad=" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+let line_len=0
+line=""
+for f in $(ls -a $dir);do
+  f1=$dir$slash$f     # build fully qualified name
+  if [ -d $f1 ]; then
+    let l=${#f}
+    let pad_len=$col_size-$l
+    line=$line$f${pad:0:$pad_len}
+#   echo "??"$line $pad_len
+    let line_len=${#line}
+    let longer=$line_len+$max_dir_len
+    if [ $longer -gt 80 ]; then
+      echo $line
+      let line_len=0
+      line=""
+    fi
+  fi 
+done
+
+if [ $line_len -gt 0 ]; then
+  echo $line
+fi
