@@ -9,7 +9,7 @@ read outdir tail
 #indir=pwd
 w1='#!/usr/bin/env bash'
 w2='# '
-w3='# wrapper to move files '
+w3='# wrapper to move files    created by 2frmgen '
 w4='# '
 w5='my_2frm1='$indir'          # input directory '
 w6='my_2frm2='$outdir'          # output directory '
