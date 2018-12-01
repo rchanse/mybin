@@ -12,7 +12,7 @@ let max_dir_len=0
 for f in $(ls -a $dir); do
   f1=$dir$slash$f     # build fully qualified name
   if [ -d $f1 ];then  # is a directory
-    let l=${#f}
+    let l=${#f}       # length of variable f
 #   echo $f $l
     if [ $l -gt $max_dir_len ]; then
       long_dir=$f
