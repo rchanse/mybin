@@ -75,7 +75,7 @@ if [ "$1" == "q" ]; then
 # grep -nR $2 * > ~/tempname  # uncomment this for all subdir of PWD
   grep -n $2 * > ~/tempname   # comment this if you uncomment the above
   wc ~/tempname
-  g2dir rep ~/tempname
+  grdir rep ~/tempname
   action=noop
 fi
 
