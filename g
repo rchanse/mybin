@@ -96,11 +96,12 @@ case "$action" in
   echo "       show  n    - 10 entries in list     "
   echo "                     starting at n         "
   echo "        0         - vim $NAMES_list        "
-  echo " ===>   n         - vim n-th entry in $NAMES_list"
+  echo "        n         - vim entry n (unless parms 2, 3, 4 "
+  echo "                   - are provided they override the vim cmd "
+  echo "                   - eg  g 4 rm -i  uses  rm -i 4-th file "
   echo "        q  value  - q(uickly) locate files  "
   echo "              with value in name and put   "
   echo "              in list file                 "
-
   echo "  list file is $NAMES_list                 "
   echo "                                           "
   echo "                                           "
@@ -136,7 +137,13 @@ if  is_integer $1; then
       tailend=${thefile:1}
       thefile=$HOME$tailend
     fi
-    vim $thefile
+    cmd_action="vim"
+    if [ ".$2" != "." ]; then
+       cmd_action="$2 $3 $4 $5 "  # allow for 4 parm
+    fi
+    echo $cmd_action $thefile
+    $cmd_action $thefile
+    #     vim $thefile
   else
     echo $1 is NOT in RANGE  1 .. $nl
   fi
