@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# convert file to dos type  0d 0a  for end of line
+# fixeoln.py is in $PATH   ( mark executable   use  #!/usr/bin/env python
+
+fixeoln.py todos $1

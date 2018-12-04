@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# convert file to unixs type   0a  for end of line
+# fixeoln.py is in $PATH   ( mark executable   use  #!/usr/bin/env python
+
+fixeoln.py tounix $1
