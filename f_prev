@@ -15,40 +15,29 @@ if [ ".$1" == "." ] ; then
   echo "::      null   - display this help info          ::"
   echo "::      .      - go edit the acro list file      ::"
   echo "::      other  - acro for filename in file_input ::"
-  echo "::    parm2    - action to take default vim      ::"
-  echo "::               if sudo ->  sudo vim parm1      ::"
+  echo "::    parm1    - action to take default vim      ::"
+  echo "::                                               ::"
   echo "::                                               ::"
   echo ":: format of acro file    3 values               ::"
   echo "::   field1 acro  the acronym to search for      ::"
   echo "::   field2 filename to act upon                 ::"
   echo "::   field3 action to take  null  vim            ::"
-  echo "::    (more info in the acro file itself.)       ::"
   echo ":::::::::::::::::::::::::::::::::::::::::::::::::::"
   exit 
 fi
 
-# path to the acro file
 if [ ".$1" == ".." ] ; then    # use  f .  to get to the acro file
   vim $file_input
   exit
 fi
 
 
-found="no"   
-
-#  if null-line skip it
-#     if char1 of acro is #  skip it
-#        if passed-val is acro  mark found and bail to work
-
-while  read -r acro filename action rest ; do
-  if [ "." != ".$acro" ]; then
-    if [ ${acro:0:1}  != "#" ]; then
-      if [ "$1" == "$acro" ] ; then
-        found="yes"
-        echo "matched acro : "$acro", filename :" $filename", action :"$action
-        break                                # the quick out when found
-      fi
-    fi 
+found="no"
+while  read -r acro filename action ; do
+  if [ "$1" == "$acro" ] ; then
+    found="yes"
+    echo "matched acro : "$acro", filename :" $filename", action :"$action
+    break                                # the quick out when found
   fi
 done < $file_input       # end read loop from given file_input
 
@@ -61,10 +50,11 @@ if [ "$found" == "no" ] ; then
 fi
 
 cmd_action=""                       # unknow what to do
-# handling sudo on cmdline  to empower f   
+# handling sudo to empower f   
 sudoit=""                          # defaulting sudoit to null
 if [ ".$p2" == ".sudo" ] ; then     # found on original cmd line
   sudoit="sudo"
+  #  echo "parm 2 is sudo "
 fi
 
 # evaluate for cmd_action value
@@ -89,25 +79,19 @@ fi
 
 # Handle ~/whoever   to become     /home/$USER/whoever
 if [ ${filename:0:1} == "~" ] ; then
-# if [ ".$UID" == ".0" ] ; then     # the root case
-#   lead="/root"
-# else
-#   lead="/home/"$USER      #  non root user
-# fi
+  if [ ".$UID" == ".0" ] ; then     # the root case
+    lead="/root"
+  else
+    lead="/home/"$USER      #  non root user
+  fi
 
   lead=$HOME              # now is /home/$USER   or   /root
-  tailend=${filename:1}   # peel off the ~
+  tailend=${filename:1}   # peel of the ~
   filename=$lead$tailend  # provide actual name 
   #echo $filename          # show on screen (just in case)
 fi
 
-# handle action being sudo
-if [ ".$action" == ".sudo" ]; then
-  sudoit="sudo"
-  cmd_action="vim"
-fi
-
-#echo "sudoit :"$sudoit 
+#echo "sudoit :"$sudoit
 #echo "filename :"$filename
 #echo "cmd_action :"$cmd_action
 echo $sudoit $cmd_action $filename
