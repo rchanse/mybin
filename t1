@@ -1,6 +1,0 @@
-echo  before:$PYTHONPATH
-ls -al $PYTHONPATH
-PYTHONPATH="/home/rchansen/pythonrch/temp2"
-ls -al $PYTHONPATH
-python a.py
-echo  after:$PYTHONPATH
