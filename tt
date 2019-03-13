@@ -20,3 +20,60 @@ filechk /home/rchansen/.local/bin
 filechk /home/rchansen/bin
 filechk /home/rchansen/bin/f
 filechk /home/rchansen/bingit/$1
+exit
+---------------
+#!/bin/bash
+x="a b c d"
+w=`head -1 $x | cut -d: -f3`
+echo $w
+---------------
+#!/bin/bash
+x="a b c d"
+w=`head -1 $x | cut -d: -f3`
+echo $w
+---------------
+#!/usr/bin/env bash
+---------------
+#!/bin/bash
+# cd ~
+if [ ".$1" == "." ] ; then
+  echo no directory given, no work, I quit
+  exit 4
+fi
+
+backdir=$1
+
+echo $PWD/$backdir
+if [ -d $PWD/$backdir ] || [ -e $PWD/$backdir ] || [ -a $PWD/$backdir ] ; then
+  echo $backdir exist in some fashion , I quit.
+  echo please delete it or use another name.
+  exit 8
+fi   
+
+mkdir $backdir
+ls -al $backdir
+
+cd $backdir
+cp -v ~/.profile .
+cp -v ~/.bashrc .
+cp -v ~/.bash_aliases .
+cp -v ~/.vimrc .
+cp -v ~/bin/mkbackit .
+# tar -cvzf vim.tar.gz ~/.vim
+tar -cvzf bin.tar.gz ~/bin
+tar -cvzf blp.tar.gz ~/blp
+# tar -cvzf gitstuff.tar.gz ~/gitstuff
+# tar -cvzf JAP.tar.gz ~/JAP_med_2017
+tar -cvzf python.tar.gz ~/python
+# tar -cvzf spreads.tar.gz ~/spreads
+# tar -cvzf tn.tar.gz ~/tn
+
+---------------
+#!/usr/bin/env bash
+python $1.py
+---------------
+---------------
+---------------
+---------------
+---------------
+---------------

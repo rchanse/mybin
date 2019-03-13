@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+echo " "
+echo "Hit return for most recent 15 in PWD "$PWD "and below: "
+echo -n "How many days to goback ? "
+read days
+
+if [ ".$days" == "." ]; then 
+
+find $1 -type f -exec stat --format '%Y :%y %n' "{}" \;\
+ | sort -nr | cut -d: -f2- | head -n 15
+exit
+fi
+
+let ndays=$days
+let backdays=(-1)*$ndays
+let backhrs=(-24)*$ndays
+let t60=60
+let t24=24
+let hrs=$ndays*$t24
+echo $hrs
+let minutes=$ndays*$t60*$t24   # num-day * 60 min/hr * 24 hr/day
+let backminutes=(-1)*$minutes
+echo $days  $ndays $backdays  $minutes $backminutes
+
+# different examples  ( note  throw away cache type files
+
+# files change minutes back
+#find /home/rchansen -type f -mmin  $backminutes | grep -v cache >  ~/tempname
+ echo "#find /home/rchansen -type f -mmin  $backminutes | grep -v cache >  ~/tempname"
+ 
+find /home/rchansen -type f -mmin  $backminutes | grep -v cache >  ~/tempname
+sleep 3
+vim ~/tempname
+
+exit
+# back up by ctime
+# find /home/rchansen -type f -ctime $backdays | grep -v cache >  ~/tempname
+
+# back up by hrs
+echo "find /home/rchansen -type f -mtime $backhrs | grep -v cache \
+  | grep -v git  >  ~/tempname1"
+find /home/rchansen -type f -mtime $backhrs | grep -v cache \
+ | grep -v git  >  ~/tempname1
+sort ~/tempname1 > ~/tempname2
+sleep 3
+vim ~/tempname2
+

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+echo "Sample make a bash file"
+#
+dir="/home/rchansen/testing/"
+file=".profile"
+echo "creating "$dir$file
+cat << "EOFprofile" > $dir$file
+EOFprofile
+#
+#
+dir="/home/rchansen/testing/"
+file=".bashrc"
+echo "creating "$dir$file
+cat << "EOFbashrc" > $dir$file
+EOFbashrc
+#
+dir="/home/rchansen/testing/"
+file=".bash_aliases"
+echo "creating "$dir$file
+cat << "EOFbash_aliases" > $dir$file
+EOFbash_aliases
+#
+dir="/home/rchansen/testing/"
+file=".vimrc"
+echo "creating "$dir$file
+cat << "EOFvimrc" > $dir$file
+EOFvimrc
+#

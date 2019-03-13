@@ -39,7 +39,7 @@ let g:netrw_fastbrowse     =1  " med speed dir browsing
 let g:netrw_keepdir        =0  " keep cur dir same as brow dir
 " let g:netrw_liststyle      =2  " 0-thin, 1-long, 2-wide, 3-tree 
 let g:netrw_retmap         =1  " see doc
-let g:netrw_silent         =1  " transfer done  0-normal, 1-silent
+"let g:netrw_silent         =1  " transfer done  0-normal, 1-silent
 let g:netrw_special_syntax =1  " see doc
 
 " just in case to prevent netwr plugin  uncomment the following two lines
@@ -184,7 +184,7 @@ nnoremap tm  :tablast<cr>    " rightmost (max to right)
 
 fun!  Fit(acro)
     let s:found = "no"
-    for line in readfile('/home/rchansen/bin/f_acrolist')
+    for line in readfile('/home/rchansen/.vim/f_acrolist')
 	if  s:found == "no"  
 	    let words = split(line)
             if  words[0] == a:acro
@@ -197,4 +197,5 @@ fun!  Fit(acro)
     echo "Acronym "a:acro" is NOT in the list -- edit with acro"
 endfunction
 " type aid to invoke Fit function
-map FF :call Fit("
+map FF :call Fit("")<left><left>
+

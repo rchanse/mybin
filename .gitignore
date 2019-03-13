@@ -3,3 +3,8 @@
 .*.swp
 .*~
 tempname
+f_acrolist
+gnamelist
+g2namelist
+gdirnamelist
+grmelist
