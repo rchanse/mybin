@@ -4,6 +4,17 @@
 # see /usr/share/doc/bash/examples/startup-files for examples.
 # the files are located in the bash-doc package.
 
+# taken from /etc/login.defs on my Xubuntu
+##  *REQUIRED*  The default PATH settings, for superuser and normal users.
+## #
+## # (they are minimal, add the rest in the shell startup files)
+## ENV_SUPATH	PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+## ENV_PATH	PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+echo "original PATH : "$PATH
+
+
 echo "Before call to .bashrc"
 # the default umask is set in /etc/profile; for setting the umask
 # for ssh logins, install and configure the libpam-umask package.
@@ -27,4 +38,3 @@ echo "(2)"$PATH
 # Ubuntu make installation of Ubuntu Make binary symlink
 PATH=/home/rchansen/.local/share/umake/bin:$PATH
 echo "(3)"$PATH
-
