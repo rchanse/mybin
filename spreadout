@@ -1,0 +1,156 @@
+#!/usr/bin/env bash 
+
+echo -n "Did you make the binbin fix? YyNn : "
+
+read answer tail
+if [ ".$answer" == ".Y" ]; then   # cap Y  only
+    echo "Good for you."
+else
+    echo "search for binbin and fix it, then try again"
+    exit
+fi
+
+# purpose of this script is to take the mybin (or raspbin) directory
+# and put it in place for a new user  creates ~/bin dir (acually
+# merges these into existing ~/bin and put  .profile .bashrc .bash_aliases
+# .vimrc  .vim/FF_acrolist mine.vim
+
+# method is a follows 
+#  a. insure ~/bin  ~/.vim  ~/.vim/colors  directories exist.
+#  b. request suffix for backing up ~/bin
+#  c. back ~/bin up and verify the backup matches
+#  d. insure the non-bin member are not in bin directory at
+#     present (~/.profile ~/.bashrc ~/.bash_aliases  ~/.vimrc
+#     FF_acrolist (fast find files by acronym)  mine.vim  colorscheme
+#  e. move the current non-bin members into the backup.
+#  f. copy overlay this directory mybin or raspbin into ~/bin
+#     overlaying existing member of the same name
+#  g. move (I said MOVE) the non-bin member to the correct places
+#  h. source .profile  or  logoff/logon
+#  NOTE on backout  (overlay ~/bin with the backup (see c.) and
+#  move the non-bin member to their rightful homes
+
+#  a. insure ~/bin  ~/.vim  ~/.vim/colors  directories exist.
+
+# check directory function
+function chk_dir(){
+    # t parms  first parm  dir to check, second parm retcode if not exist
+
+    a_dir=$1
+    if [[ -d $a_dir ]]; then    
+        echo $a_dir "is a currently existing directory : OK!! " 
+	return 0
+    else
+	let rc=$2
+        echo $a_dir "is does NOT exist as a directory -- rc : "$rc
+	return $rc
+    fi
+}
+
+let continue_cc=0
+# get to user root dir
+cd
+
+chk_dir bin 1 
+  let continue_cc=$?
+
+if [ $continue_cc = 0 ]; then
+  chk_dir .vim 2
+  let continue_cc=$?
+else
+  echo check stmt above
+  exit
+fi  
+
+if [ $continue_cc = 0 ]; then
+  chk_dir .vim/colors 3 
+  let continue_cc=$?
+else
+  echo check stmt above
+  exit
+fi  
+#!/usr/bin/env bash
+savewhere=$PWD
+echo -n "Enter suffix for backup to my bin dir : "
+read answer tail
+
+# get to root
+cd
+newdir=bin$answer    # remember this dir to move .profile ...  to it
+if [ -d $newdir ]; then
+    echo "Try again directory $newdir ALREADY exists."
+    exit
+#else
+#  mkdir $newdir
+fi
+
+cp -a bin $newdir
+
+
+echo "the answer is "$answer $savewhere
+
+diff -r bin $newdir
+diff_rc=$?
+if [ $diff_rc = 0 ]; then
+    echo "Backups match  Yea!"
+else
+    echo "BooBoo"
+fi
+cd $savewhere
+#  d. insure the non-bin member are not in bin directory at
+#     present (~/.profile ~/.bashrc ~/.bash_aliases  ~/.vimrc
+#     FF_acrolist (fast find files by acronym)  mine.vim  colorscheme
+
+function file_exist_check (){
+   FileToCheck=$1
+   if [ -f $FileToCheck ]; then
+   echo "$FileToCheck is a bin member  NO NO -- FIX this"
+   exit
+else
+   echo "$FileToCheck is not a bin directory member  Good Good."
+fi
+}
+
+file_exist_check $USER/bin/.profile
+file_exist_check $USER/bin/.bashrc
+file_exist_check $USER/bin/.bash_aliases
+file_exist_check $USER/bin/.vimrc 
+file_exist_check $USER/bin/FF_acrolist
+file_exist_check $USER/bin/mine.vim
+
+#  e. move the current non-bin members into the backup.
+   # Note since they are not in ~/bin they are not in backup of c.
+if [ -f ~/.profile ]; then
+   cp -v  ~/.profile             $HOME/$newdir/.profile
+fi   
+if [ -f ~/.bashrc ]; then
+   cp -v  ~/.bashrc              $HOME/$newdir/.bashrc 
+fi   
+if [ -f ~/.bash_aliases ]; then
+   cp -v  ~/.bash_aliases        $HOME/$newdir/.bash_aliases
+fi   
+if [ -f ~/.vimrc  ]; then
+   cp -v  ~/.vimrc               $HOME/$newdir/.vimrc
+fi   
+if [ -f ~/.vim/FF_acrolist ]; then
+   cp -v  ~/.vim/FF_acrolist     $HOME/$newdir/.FF_acrolist
+fi   
+if [ -f ~/.vim/colors/mine.vim  ]; then
+   cp -v  ~/.vim/colors/mine.vim $HOME/$newdir/mine.vim
+fi   
+echo "got past copy-ing nonbin files to backupbin":
+#  f. copy overlay this directory mybin or raspbin into ~/bin
+#     overlaying existing member of the same name
+
+'cp' -rav $HOME/raspbin/. $HOME/binbin/
+#  g. move (I said MOVE) the non-bin member to the correct places
+
+   mv -v   $HOME/bin/.profile        ~/.profile
+   mv -v   $HOME/bin/.bashrc         ~/.bashrc
+   mv -v   $HOME/bin/.bash_aliases   ~/.bash_aliases
+   mv -v   $HOME/bin/.vimrc          ~/.vimrc
+   mv -v   $HOME/bin/FF_acrolist     ~/.vim/FF_acrolist 
+   mv -v   $HOME/bin/mine.vim        ~/.vim/colors/mine.vim
+
+#  h. source .profile  or  logoff/logon
+#  NOTE on backout  (overlay ~/bin with the backup (see c.) andj
