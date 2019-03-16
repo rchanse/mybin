@@ -42,3 +42,4 @@ alias lsd='ls -al | grep "^d"'
 alias ntx='date "+%a  %d %b %Y   %r "'
 alias v2='vim tempname'
 # :alias g='vim --remote-silent'
+alias psgit="PS1='\u\w\$(__git_ps1) $ '"
