@@ -2,7 +2,7 @@
 #acronym       filename	         action to take  none/null = vim
 # if parm3 (action) is sudo  then  'sudo vim filename'  is issued
 # if first non blank is "#" the line is a comment and bypassed
-   .     ~/.vim/f_acrolist  
+   .     ~/.vim/FF_acrolist  
   acrobin   ~/bin/FF_acrolist  
   scam   ~/temp/scam
   notes /home/rchansen/nbdjango/rchnbdj/rchnotes

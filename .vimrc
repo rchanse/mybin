@@ -1,12 +1,12 @@
 syntax on
-call plug#begin('~/vim/plugged')
+"  call plug#begin('~/vim/plugged')
 
 " Plug 'flazz/vim-colorschemes'
-  Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+"    Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 " Plug 'junegunn/fzf'
 " Plug 'damage220/vim-finder'
 "  Plug 'vim-scripts/Python-Syntax-folding'
-call plug#end()
+"  call plug#end()
 :map <C-t> : NERDTreeToggle
 
 " auto reload of .vimrc
