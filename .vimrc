@@ -184,7 +184,7 @@ nnoremap tm  :tablast<cr>    " rightmost (max to right)
 
 fun!  Fit(acro)
     let s:found = "no"
-    for line in readfile('/home/rchansen/.vim/f_acrolist')
+    for line in readfile('/home/rchansen/.vim/FF_acrolist')
 	if  s:found == "no"  
 	    let words = split(line)
             if  words[0] == a:acro
@@ -198,4 +198,3 @@ fun!  Fit(acro)
 endfunction
 " type aid to invoke Fit function
 map FF :call Fit("")<left><left>
-

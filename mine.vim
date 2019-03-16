@@ -87,4 +87,3 @@ hi Visual term=reverse ctermbg=blue  guibg=grey60 " to show up
 hi Visual ctermbg=blue  guibg=white  " to show up
 " vim: sw=2
 
-
