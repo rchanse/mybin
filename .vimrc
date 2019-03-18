@@ -1,13 +1,16 @@
+" changes
+" Sun 17 Mar 2019 12:28:42 PM CDT 
+"  comment out plugin manager  and  NERDtree  "(1)
 syntax on
-"  call plug#begin('~/vim/plugged')
+"(1)call plug#begin('~/vim/plugged')
 
 " Plug 'flazz/vim-colorschemes'
-"    Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+"(1)  Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 " Plug 'junegunn/fzf'
 " Plug 'damage220/vim-finder'
 "  Plug 'vim-scripts/Python-Syntax-folding'
-"  call plug#end()
-:map <C-t> : NERDTreeToggle
+"(1)call plug#end()
+"(1):map <C-t> : NERDTreeToggle
 
 " auto reload of .vimrc
 autocmd! bufwritepost .vimrc source %
