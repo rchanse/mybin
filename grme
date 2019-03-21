@@ -5,29 +5,41 @@ NAMES_list=/home/$USER/bin/grmelist    # file name of list to process
 
 if [ ".$1" == "." ]; then
 echo " grme - grep  a list of names for a string  "
+echo "  method: 1. get list of file to search in x  " 
+echo "          2. grme rep x ==> x to grmelist    " 
+echo "          3. grme searchstr  > some_file     " 
+echo "          4. some_file has line# lines that match"
+echo "             with the file# in the list      " 
+echo "          5. grme file#      vim-s to file   " 
+echo "             grme file# ##   vim-s to line in file"
 echo " " 
 echo " the list is ===>> "$NAMES_list
 echo " "
 echo " grme parm1 parm2"
 echo "   parm1 - 0  enter the list of name via vim                     "
+echo "         - / in char 1 - remove first char and use as char-str   "
 echo "         - n (numeric) enter the n-t value in the list           "
 echo "         -     at line provided by parm2  (default 1 if null)    "
 echo "         - char-str   value to be grep-ed for                    "
 echo "         - rep  replace the names list by file in parm2          "
 echo "   parm2 - file name used with 'rep'"
 echo "         - show - echo info on grep/search in list"
-echo " "
-echo " hint use grme char to obtain  num of line and file  to vim +n file"
+echo " NOTES ! to search for a number - present /number                "
+echo "         to search for '/string'  present '//string'             "
+echo "                                                                 "
 exit
 fi
 
 
 # nl is the number of entries in list of names
-if [ -f $NAMES_list ]; then
+if [ -f $NAMES_list ]; then                # assume lines in NAMES_list
   nl=`wc $NAMES_list | awk '{print $1}'`  
   if [ ".$debug" == ".TRUE" ]; then
     echo $nl $NAMES_list
   fi
+else
+  echo "No $NAMES_list found, I quit"
+  exit
 fi
 
 # use $1 vim to edit the list in question
@@ -58,25 +70,54 @@ function in_range() {
   fi
 }
 
+function do_as_integer() {
 if  is_integer $1; then                             # an integer ?
-  if in_range $1; then                              # in range   ?
-    thefile=`head -n$1 $NAMES_list  | tail -n1`     # select file to vim
+# echo "just in" $1
+  subparam1=$1
+  subparam2=$2
+# echo "<>"$subparam1"<>"$subparam2"<>" 
+# read
+  if in_range $subparam1; then                              # in range   ?
+    thefile=`head -n$subparam1 $NAMES_list  | tail -n1`     # select file to vim
     offset=""  
-    echo "parm2 is >"$2"<"
-    if [ ".$2" == "." ]; then
+#   echo "parm2 is >"$subparam2"<"
+    if [ ".$subparam2" == "." ]; then
         offset=" "
-    elif  is_integer $2;then
-       offset="+"$2
-      fi
+    elif  is_integer $subparam2;then
+       offset="+"$subparam2
     fi
-
     vim $offset $thefile
-    echo $offset $thefile
+    echo "vim "$offset $thefile
     exit                                            # out of exec
   else
     echo $1 is not in range 1 - $nl size of $NAMES_list
+    exit
   fi
-#fi
+fi
+#cho "out the bottom"
+#ead
+return 0
+}
+
+careifnumber="yes"
+param1=$1                        # parm1 from cmdline
+param2=$2                        # parm2 from cmdline
+#echo $param1
+lead=${param1:0:1}      # grab lead char of $1 passed in
+if [ ".$lead" == "./" ]; then
+  careifnumber="no"
+  param1=${param1:1}     # throw away lead char
+#else
+#  echo $lead
+#  read
+fi
+
+#echo "debug " $param1 $careifnumber
+#read answer
+
+if [ ".$careifnumber" == ".yes" ]; then
+  do_as_integer $param1 $param2
+fi
 
 # process the list
 let index=1
