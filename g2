@@ -91,10 +91,10 @@ case "$action" in
   echo "  list file is $NAMES_list                 "
   echo "                                           "
   echo "  you will be look in the $PWD for a desired value"
+  echo " 1. grep -n someval  PWD            "
+  echo " 2. populate list file with  g2 rep somename  "
   echo "                                           "
-  echo " populate list file with  g2 rep somename  "
-  echo "                                           "
-  echo " line items have  filename:line#:line info ; code win use cut -d:"
+  echo " line items have  filename:line#:line info ; code uses  cut -d:"
   echo " to split lines and use   vim +position filename  "
   echo "                                           "
   echo "  g2  parm1 parm2- show this help/syntax  "
@@ -108,6 +108,7 @@ case "$action" in
   echo "        n         - vim entry n at lineno  "
   echo "        q  value  - make file list grep-inr for value"
   echo "                                           "
+  echo "  NOTE g2 q value  does grep -n value ~/tempname then g2 reps-it"
   echo "  the grep -n   could be grep -nR to drill down"
  ;;
 
