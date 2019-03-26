@@ -4,7 +4,10 @@
 # method
 #   cd desired dir
 #   diffras desired-mem
-
+xbin="raspbin"
+if ! [ -f $xbin ]; then 
+  xbin="mybin"
+fi
 # check to see if they exist
 both_files=true
 if ! [ -f $1 ]; then
@@ -12,8 +15,8 @@ if ! [ -f $1 ]; then
   both_files=false
 fi
 
-if ! [ -f ~/raspbin/$1 ]; then
-  echo "$1 not in ~/raspbin"
+if ! [ -f ~/$xbin/$1 ]; then
+  echo "$1 not in ~/$xbin"
   both_files=false
 fi  
 
@@ -22,10 +25,10 @@ if [ $both_files = false ]; then
   exit 4
 fi
 
-diff $1 ~/raspbin/$1
+diff $1 ~/$xbin/$1
 diffrc=$?
 if [ ".$diffrc" == ".0" ]; then
-   echo "$PWD/$1 and ~/raspbin/$1 are the SAME"
+   echo "$PWD/$1 and ~/$xbin/$1 are the SAME"
 else
-   echo "$PWD/$1 and ~/raspbin/$1 are the UNEQAL  -- check above"
+   echo "$PWD/$1 and ~/$xbin/$1 are the UNEQAL  -- check above"
 fi
