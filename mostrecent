@@ -27,9 +27,10 @@ echo $days  $ndays $backdays  $minutes $backminutes
 
 # files change minutes back
 #find /home/rchansen -type f -mmin  $backminutes | grep -v cache >  ~/tempname
- echo "#find /home/rchansen -type f -mmin  $backminutes | grep -v cache >  ~/tempname"
+
+ echo "#find $PWD -type f -mmin  $backminutes | grep -v cache >  ~/tempname"
  
-find /home/rchansen -type f -mmin  $backminutes | grep -v cache >  ~/tempname
+find $PWD -type f -mmin  $backminutes | grep -v cache >  ~/tempname
 sleep 3
 vim ~/tempname
 

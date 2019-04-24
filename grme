@@ -1,29 +1,30 @@
+#!/usr/bin/env bash
+#
 # this script will use the file                          
 # grep a string against the individual member of it
 
 NAMES_list=/home/$USER/bin/grmelist    # file name of list to process
+OUTLIST=/home/$USER/bin/grmeout    # file name of list to process
 
 if [ ".$1" == "." ]; then
-echo " grme - grep  a list of names for a string  "
-echo "  method: 1. get list of file to search in x  " 
-echo "          2. grme rep x ==> x to grmelist    " 
-echo "          3. grme searchstr  > some_file     " 
-echo "          4. some_file has line# lines that match"
-echo "             with the file# in the list      " 
+echo " files-to-search list   :"$NAMES_list
+echo " grep/matches are found :"$OUTLIST
+echo " grme - grep for a given-string in a list of files"
+echo "  method: 1. decide on a list of files (say in 'file-list' "
+echo "          2. grme rep file-list   replace to files-to-search"
+echo "            2a. add names by hand editing  grme 0"
+echo "            2b. names to be relative/explicit(else $PWD.name)"
+echo "          3. grme srchstr=> create grep/matches "
+echo "          4. grme out        vim-s to grep/match file"
 echo "          5. grme file#      vim-s to file   " 
-echo "             grme file# ##   vim-s to line in file"
-echo " " 
-echo " the list is ===>> "$NAMES_list
-echo " "
 echo " grme parm1 parm2"
 echo "   parm1 - 0  enter the list of name via vim                     "
 echo "         - / in char 1 - remove first char and use as char-str   "
-echo "         - n (numeric) enter the n-t value in the list           "
-echo "         -     at line provided by parm2  (default 1 if null)    "
+echo "         - n (numeric) vim to the n-th file in files-to-search.  "
 echo "         - char-str   value to be grep-ed for                    "
 echo "         - rep  replace the names list by file in parm2          "
+echo "         - out  vim to "$OUTLIST" of found files     "
 echo "   parm2 - file name used with 'rep'"
-echo "         - show - echo info on grep/search in list"
 echo " NOTES ! to search for a number - present /number                "
 echo "         to search for '/string'  present '//string'             "
 echo "                                                                 "
@@ -48,6 +49,12 @@ if [ ".$1" == ".vim" -o ".$1" == ".0" ]; then
    exit
 fi
 
+# use $1 vim to edit the output of a search
+# u
+if [ ".$1" == ".out"  ]; then
+   vim $OUTLIST
+   exit
+fi
 # use $1 to refresh/reload grmelist 
 if [ ".$1" == ".rep" ]; then
    cp $2 $NAMES_list
@@ -120,13 +127,18 @@ if [ ".$careifnumber" == ".yes" ]; then
 fi
 
 # process the list
+#
+#  next line empties OUTLIST from before"
+echo "00 searching for >"$1"< Start line" | tee $OUTLIST 
 let index=1
   while [ $index -le $nl ]; do
     thefile=`head -n$index $NAMES_list  | tail -n1`
-    grep -n $1 $thefile
+    grep -n $1 $thefile  | tee -a $OUTLIST  # show matching lines
+    grep -n $1 $thefile     # this time for the retcode
     grep_retcd=$?                # remember grep return code
-    if [ ".$grep_retcd" == ".0" ] || [ ".$2" == ".show" ]; then
-      echo $index   $thefile .... $grep_retcd
+    if [ ".$grep_retcd" == ".0" ]; then
+      echo $index   $thefile "<<=== " | tee -a $OUTLIST
     fi
     let index=$index+1
   done
+
