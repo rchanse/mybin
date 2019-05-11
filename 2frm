@@ -114,12 +114,14 @@ if [ -f $in_filename ]; then             # filename exists ??
 
         if [ -f $output_dir/$member ]; then
             echo "* * *  "$output_dir/$member" * * EXISTs"
+            echo "      you will be OVERLAYING it. "
         else
             echo "* * *  "$output_dir/$member" * * does NOT exist (yet)"
+            echo "      you will be CREATING  it. "
         fi
 
         answer="no"                        # default no copy
-        echo -n "Do you want to copy/overlay the file ?? (y) "
+        echo -n "Do you want to create/overlay the file ?? (y) "
         read answer tail
         if [ ".$answer" == ".y" ]; then
             touch $output_dir/$member              # insure dest exists
@@ -134,8 +136,11 @@ if [ -f $in_filename ]; then             # filename exists ??
         cp -av $in_filename $output_dir/$member    # copy
   ;;
   "r" ) 
-        if [ $debug = 0 ]; then echo "rename prompt" ; fi
-        newname=""
+    if [ $debug = 0 ]; then 
+        echo "rename prompt" 
+    fi
+
+    newname=""
 	echo " "
 	echo -n "Enter the new output_dir member : "
 	read answer tail
@@ -159,7 +164,10 @@ if [ -f $in_filename ]; then             # filename exists ??
 	fi   
   ;;
   "=" )
-        if [ $debug = 0 ]; then echo "files equal"; fi
+    if [ $debug = 0 ]; then 
+        echo "files equal"
+    fi
+
 	if [ -f $output_dir/$member ]; then
 	    equal_comp="are NOT the same"
 	    cmp $in_filename  $output_dir/$member

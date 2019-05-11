@@ -1,11 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #Set default values
+cmdIam="diff2"
 action=$1                                 # default for case
-let count=$#
 
-NAMES_list=$HOME/bin/gnamelist  # non-root file with list of names
+NAMES_list=$HOME/bin/$cmdIam   # non-root file with list of names
+lst="list"
+NAMES_list=$NAMES_list$lst
 
+# calculate number of entries in NAMES_list
 if [ -f $NAMES_list ]; then
   nl=`wc $NAMES_list | awk '{print $1}'`  
   # nl is the number of entries in list of names
@@ -50,12 +53,32 @@ echo "List of names file " $NAMES_list "has" $nl "entries"
   done
  }
 
+
+function get_name_from_list() 
+{
+if  is_integer $1; then
+  if in_range $1; then
+    thefile=`head -n$1 $NAMES_list  | tail -n1`
+    
+    # handle the ~
+    if [ ${thefile:0:1} == "~" ] ; then
+      tailend=${thefile:1}
+      thefile=$HOME$tailend
+    fi
+    return 0   # answer is in $thefile
+  else
+    echo $1 is NOT in RANGE  1 .. $nl
+    return 4   # code for out of range
+  fi
+else
+  echo "$1 is NOT and integer"
+  return 8  # code for non integer"
+fi
+}
+
+
 # end of functions
 # start of mainline
-# if [ $# = 0 ]; then            # alternate setup for help
-#    echo "print the help info"
-#    action=help
-# fi
 
 if [ ".$1" == "." ] || [ ".$1" == ".." ]; then 
    action=help
@@ -92,18 +115,27 @@ case "$action" in
 "help" )   # provide syntax     no parms or parm1=help
   echo "  list file is $NAMES_list                 "
   echo "                                           "
-  echo "     parm1  parm2 (maybe more)             "
-  echo "  g  (none) or .  - show this help/syntax  $0 with $# parms"
+  echo "     parm1  parm2                          "
+  echo "  cmdl (none)     - show this help/syntax  "
+  echo "       .          - show this help/syntax  "
   echo "       rep  file  - overlay list with file "
   echo "       add  file  - concat file to list    "
   echo "       show       - enumerat entire list   "
-  echo "       show  n    - 10 entries in list  starting at n "
+  echo "       show  n    - 10 entries in list     "
+  echo "                     starting at n         "
   echo "        0         - vim $NAMES_list        "
-  echo "        n         - vim entry n (unless parms 2, 3, 4 "
-  echo "                   - are provided they override the vim cmd "
-  echo "                   - eg: g 4 rm -i  uses  rm -i 4-th file "
-  echo "        q  value  - q(uickly)   locate value > $NAMES_list "
-  echo "                                                           "
+  echo "        n         - vim entry n            "
+  echo "        q  value  - q(uickly) locate files  "
+  echo "              with value in name and put   "
+  echo "              in list file                 "
+  echo "                                           "
+  echo "  diff2  #1  #2    do diff on two files    "
+  echo "                      or directories       "
+  echo "                                           "
+
+  echo "  list file is $NAMES_list                 "
+  echo "                                           "
+  echo "                                           "
  ;;
 
 "vimit" )
@@ -125,34 +157,41 @@ case "$action" in
   cat $2 >> $NAMES_list
   ;;
 
- * )  # The default action  
+ * )  # edit file
 
-if  is_integer $1; then
-  if in_range $1; then
-    thefile=`head -n$1 $NAMES_list  | tail -n1`
-    
-    # handle the ~
-    if [ ${thefile:0:1} == "~" ] ; then
-      tailend=${thefile:1}
-      thefile=$HOME$tailend
-    fi
-    cmd_action="vim"        # the default
-    echo $#  num of parms $count
-    if [ $count -gt 1 ]; then
-       echo revise $cmd_action
-       cmd_action="$2 $3 $4 $5"  # allow for 4 parm
-    fi
-    echo $cmd_action $thefile
-    $cmd_action $thefile
-    #     vim $thefile
-  else
-    echo $1 is NOT in RANGE  1 .. $nl
-  fi
-else
-  echo "$1 is NOT and integer"
-  echo "you hit the default - handle what is left"
-  echo "how to handle  $1  is unknown "
+# crude but works (did not spend a lot of time on this 
+get_name_from_list $1
+let getrc=$?
+if [ $getrc == 0 ]; then
+  name1=$thefile
 fi
+echo $thefile
+
+
+get_name_from_list $2
+let getrc=$?
+if [ $getrc == 0 ]; then
+  name2=$thefile
+fi
+echo $thefile
+
+echo $name1 $name2
+
+cmp $name1 $name2
+let cmpcode=$?
+echo compare return code is $cmpcode > ~/.t
+
+if [ $cmpcode == 0 ]; then
+  echo $name1  and  $name2 are EQUAL >> ~/.t
+else
+  echo $name1  and  $name2 are DIFFERENT >> ~/.t
+  diff $name1 $name2 >> ~/.t
+fi
+vim ~/.t
+echo NOTE diff output is in ~/.t
+
+
+
   ;;
 esac
 exit 0

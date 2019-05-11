@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# 
+# wrapper to move files    created by 2frmgen 
+# 
+my_2frm1=pwd          # input directory 
+my_2frm2=/home/rchansen/mybin          # output directory 
+my_2frm3=$1             # member to move 
+my_2frm4=$2             # prompt action 
+2frm  $my_2frm1  $my_2frm2  $my_2frm3  $my_2frm4 
+#      indir      outdir     member     prompt 

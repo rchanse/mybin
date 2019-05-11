@@ -4,7 +4,7 @@
 action=$1                                 # default for case
 let count=$#
 
-NAMES_list=$HOME/bin/gnamelist  # non-root file with list of names
+NAMES_list=$HOME/bin/ggnamelist  # non-root file with list of names
 
 if [ -f $NAMES_list ]; then
   nl=`wc $NAMES_list | awk '{print $1}'`  
@@ -156,3 +156,4 @@ fi
   ;;
 esac
 exit 0
+

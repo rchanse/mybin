@@ -1,0 +1,51 @@
+#!/bin/bash
+
+#Set default values
+action="$1 $2 $3 $4"         # default for case
+echo $action
+let count=$#
+#echo $count
+NAMES_list=$HOME/bin/gnamelist  # non-root file with list of names
+if [ ".$count" == ".0" ]; then
+  echo Help doc
+  echo " utility = acts on each element of g's names   "
+  echo "   $NAMES_list                                 "
+  echo "                                               "
+  echo " Command up to 4 parms   $1 $2 $3 $4           "
+  echo "                                               "
+  echo " Examples:gall ls -al  will ls each file       "
+  echo "          gall rm -iv  will delete is ok'ed    "
+  echo "                                               "
+  exit   0
+fi
+
+if [ -f $NAMES_list ]; then
+  nl=`wc $NAMES_list | awk '{print $1}'`  
+  # nl is the number of entries in list of names
+fi
+
+echo $nl entries in $NAMES_list
+# list functions
+
+# checking for an integer type value  found linuxquestion
+function is_integer() {
+  printf "%d" $1 > /dev/null 2>&1
+  return $?
+}
+
+
+# used in show option to list NAMES_list entries and their assoc number
+echo "List of names file " $NAMES_list "has" $nl "entries"
+
+ let start=1;let end=$nl;let index=1
+
+  while [ $index -le $end ]; do
+    thefile=`head -n$index $NAMES_list  | tail -n1`
+    echo "Command for $index is "$action  $thefile
+    $action $thefile
+    let index=$index+1
+  done
+ 
+
+exit 0
+
