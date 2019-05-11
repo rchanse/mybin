@@ -9,11 +9,18 @@
 # g2namelist 
 savdir=$PWD
 cd
+echo diff bin mybin -x f_acrolist -x gnamelist -x grdirnamelist -x grmelist -x tempname -x cdit -x filedump -x g2namelist > ~/tempname
 diff bin mybin -x f_acrolist -x gnamelist -x grdirnamelist -x grmelist -x tempname -x cdit -x filedump -x g2namelist > ~/tempname
+echo diff -s .profile mybin/.profile >> ~/tempname
 diff -s .profile mybin/.profile >> ~/tempname
+echo diff -s .bashrc mybin/.bashrc >> ~/tempname
 diff -s .bashrc mybin/.bashrc >> ~/tempname
+echo diff -s .bash_aliases mybin/.bash_aliases >> ~/tempname
 diff -s .bash_aliases mybin/.bash_aliases >> ~/tempname
+echo diff -s .vimrc mybin/.vimrc >> ~/tempname
 diff -s .vimrc mybin/.vimrc >> ~/tempname
-diff -s .bin/colors/mine.vim  mybin/mine.vim  >> ~/tempname
+echo diff -s .vim/colors/mine.vim  mybin/mine.vim  >> ~/tempname
+diff -s .vim/colors/mine.vim  mybin/mine.vim  >> ~/tempname
 vim ~/tempname
 cd $savdir
+

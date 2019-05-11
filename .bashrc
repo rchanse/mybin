@@ -134,7 +134,7 @@ source /usr/local/bin/virtualenvwrapper.sh
 }
 export -f sshin
 
-export t=/home/rchansen/tempname
+export t=/home/rchansen/.t
 #echo "Hi from .bashrc"
 
 # show git status in PS1 if in a repository 
@@ -144,3 +144,4 @@ if [ -f /usr/share/git-core/contrib/completion/git-prompt.sh ]; then
     export PS1='[\u@\h \W$(__git_ps1 " (%s)")]\$ ' 
 fi
 
+. /usr/local/bin/virtualenvwrapper.sh

@@ -65,30 +65,12 @@ hi Ignore ctermfg=DarkGrey guifg=grey20
 "       8. remember  :runtime syntax/colortest.vim
 "       9. h highlight-groups     show default names
 "      10. change temp by  :hi  args   cmd
-"
-"      	    NR-16   NR-8    COLOR NAME ~
-"	    0	    0	    Black
-"	    1	    4	    DarkBlue
-"	    2	    2	    DarkGreen
-"	    3	    6	    DarkCyan
-"	    4	    1	    DarkRed
-"	    5	    5	    DarkMagenta
-"	    6	    3	    Brown, DarkYellow
-"	    7	    7	    LightGray, LightGrey, Gray, Grey
-"	    8	    0*	    DarkGray, DarkGrey
-"	    9	    4*	    Blue, LightBlue
-"	    10	    2*	    Green, LightGreen
-"	    11	    6*	    Cyan, LightCyan
-"	    12	    1*	    Red, LightRed
-"	    13	    5*	    Magenta, LightMagenta
-"	    14	    3*	    Yellow, LightYellow
-"	    15	    7*	    White
 
 hi Normal ctermbg=Black    ctermfg=White guifg=White guibg=grey20
 hi StatusLineNC term=reverse ctermbg=gray    gui=reverse
 hi NonText term=bold ctermfg=Lightred gui=bold guifg=LightBlue guibg=grey30
 
-hi Comment ctermfg=white ctermbg=brown  "green  " for comments
+hi Comment ctermfg=white ctermbg=brown  " for comments
 hi exception ctermfg=black ctermbg=green  " for try, raise, except, finally
 hi search ctermfg=darkred ctermbg=white
 hi pythonInclude ctermbg=gray ctermfg=yellow
@@ -104,5 +86,4 @@ hi Function ctermbg=white  ctermfg=blue
 hi Visual term=reverse ctermbg=blue  guibg=grey60 " to show up
 hi Visual ctermbg=blue  guibg=white  " to show up
 " vim: sw=2
-
 

@@ -40,5 +40,11 @@ unalias grep
 alias lsd='ls -al | grep "^d"'
 
 alias ntx='date "+%a  %d %b %Y   %r "'
-alias v2='vim tempname'
+alias v1='tn=~/tempname'
+alias v2='vim ~/tempname'
+alias rchset='rchn=~/rchtemp'
+alias rchv='vim ~/rchtemp'
 # :alias g='vim --remote-silent'
+alias xpw=xfce4-popup-whiskermenu
+alias xpa=xfce4-popup-applicationsmenu
+

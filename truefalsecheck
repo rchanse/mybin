@@ -1,5 +1,15 @@
 #!/bin/bash
 
+if [ ".$1" == ".debug" ]; then
+    debug=0   
+else
+    debug=1              # most like that 5-th parm is null
+fi
+
+  
+  echo "debug is "$debug
+  if [ $debug = 0 ] ; then echo "case work prompt" ">>"$prompt"<<" ; fi                            
+exit
 
 # true returns 0 
 true
@@ -74,3 +84,11 @@ else
 fi
 
 echo There are many other bash type checks  see  man bash
+
+
+if [ ".$5" == ".debug" ]; then
+    debug=true
+else
+    debug=false          # most like that 5-th parm is null
+fi
+

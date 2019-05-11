@@ -44,6 +44,7 @@ let g:netrw_keepdir        =0  " keep cur dir same as brow dir
 let g:netrw_retmap         =1  " see doc
 "let g:netrw_silent         =1  " transfer done  0-normal, 1-silent
 let g:netrw_special_syntax =1  " see doc
+" let g:netrw_hide=0             " show all files
 
 " just in case to prevent netwr plugin  uncomment the following two lines
 "
@@ -105,10 +106,10 @@ endif
 "
 inoremap jk <Esc>
 inoremap kj  <Esc>
+:map <f12> :q!<CR>
 "   set paste then   paste from outside  try Shift-Ctrl-v  (Copy was Crtl-C
 
 :map <F2> a<C-R>=strftime("%c")<CR><ESC> 
-
 ":map <C-l> :set cursorline!
 :map <C-d> : set cul!  " d for da-line cannot use l it is for window shifts
 ":highlight cursorline ctermbg=lightgray
@@ -154,7 +155,7 @@ nnoremap <c-w> <c-w>x   " swap two windows
 set foldmethod=indent
 set foldlevel=99
 " enable folding by space bar
-nnoremap <space> za
+" rch change nnoremap <space> za
 
 "au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
 
@@ -201,3 +202,12 @@ fun!  Fit(acro)
 endfunction
 " type aid to invoke Fit function
 map FF :call Fit("")<left><left>
+
+" suggestion for python
+set textwidth=79  " tw  lines longer thatn 79 will be broken
+set shiftwidth=4  " sw  operation >> indents 4 col << unindents 4 col
+set tabstop=4     " ts  hard TAB displays 4 col
+set expandtab     " et  inserts spaces when hitting TABs
+set softtabstop=4 " sts insert/delete 4 space when TAB/BACKSPACE
+set shiftround    " sr  round indent to mlt of 'shiftwidth'
+set autoindent    " ai  align the new line indent with prev line

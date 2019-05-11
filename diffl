@@ -1,6 +1,0 @@
-echo diff  ~/.local/bin/$1 $1
-diff  ~/.local/bin/$1 $1
-diff_check=$?
-if [ ".$diff_check" == ".0" ]; then
-   echo files are the same
-fi

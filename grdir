@@ -79,6 +79,14 @@ if [ "$1" == "q" ]; then
   action=noop
 fi
 
+if [ "$1" == "qr" ]; then
+  grep -nR $2 * > ~/tempname  # uncomment this for all subdir of PWD
+# grep -n $2 * > ~/tempname   # comment this if you uncomment the above
+  wc ~/tempname
+  grdir rep ~/tempname
+  action=noop
+fi
+
 case "$action" in
  
 "noop" )
