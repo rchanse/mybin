@@ -1,0 +1,261 @@
+#!/bin/bash
+
+# Save orig parms for use later
+p1=$1
+p2=$2
+#Set default values
+action=""           # default action is unknown at start of script   
+key=$1
+let count=$#
+
+function is_int(){
+# assume + or - followed by notblank, non+, non- characters
+  key=$1
+  key=$(echo $key | tr -d [=-=])   # remove possible lead -
+  key=$(echo $key | tr -d [=+=])   # remove possible lead +
+  s=$(echo $key | tr -d 0-9 )      # remove remaining digits
+  if [ -z "$s" ]; then
+    return 0
+  else
+    return 1
+  fi
+} 
+
+# set up the acronyms file list name    
+NAMES_list=$PWD/.acronyms  # non-root file with list of names
+
+# nl -- size of NAMES_list
+if [ -f $NAMES_list ]; then
+  nl=`wc $NAMES_list | awk '{print $1}'`  
+fi
+
+
+# checking for an integer is in range  between 1 and nl
+function in_range() {
+  if [ $1 -ge 1 ] && [ $1 -le $nl ] ; then
+    return 0
+  else
+    return 1 
+  fi
+}
+
+# used in show option to list NAMES_list entries and their assoc number
+function list_by_number() { 
+echo "List of names file " $NAMES_list "has" $nl "entries"
+
+  if [ "$1." == '.' ]; then
+    let start=1;let end=$nl;let index=1
+  else
+    let start=$1;let end=$start+9  # arrange for 10 lines
+    if [ $end -gt $nl ]; then
+      let end=$nl
+    fi
+    let index=$start
+  fi
+  echo "Range of entries from $start to $end"
+
+  while [ $index -le $end ]; do
+    thefile=`head -n$index $NAMES_list  | tail -n1`
+    echo ">>"  $index  $thefile
+    let index=$index+1
+  done
+ }
+# end of functions
+
+
+# start of mainline
+
+#special case handling
+
+if [ $# = 0 ]; then            # alternate setup for help
+   echo "print the help info"
+   action=help
+fi
+
+if [ ".$1" == ".." ] || [ ".$1" == ".0" ]; then 
+   action=vimit      # show acro list
+fi
+
+if [ "$1" == "show" ]; then
+  action=show
+fi
+
+if [ "$1" == "rep" ]; then
+  action=overlay
+  echo $action
+fi
+
+if [ "$1" == "add" ]; then
+  action=extend
+fi
+
+# special cases are above now handle the general case
+
+if [ ".$action" == "." ]; then    #figure alpha or num
+
+  if is_int $1; then
+    action=numkey
+  else
+    action=alphakey
+  fi
+
+fi 
+
+case "$action" in
+
+"noop" )
+  ;;
+
+"help" )   # provide syntax     no parms or parm1=help
+  echo "  acrolist is $NAMES_list                 "
+  echo "    format is  key filename      can be built by hand      "
+  echo "      or and handy genration with  du -a  (be in pwd)      "
+  echo "                                                           "
+  echo "  ft  parm1 parm2                                          "
+  echo "      (none)      - show help                              "
+  echo "      . or 0      - vim acrolist      $NAMES_list          "
+  echo "      rep   file  - overlay acrolist with file             "
+  echo "      add   file  - append to acrolist                     "
+  echo "      show        - display acrolist                       "
+  echo "       n          - numeric  parse line n  act on filename "
+  echo "      alpha       - alpha    parse line with key alpha     "
+  echo "                                                           "
+  echo " NOTE: building acrolist by du -a  builds a list with    "
+  echo "  names begining with ./ which is pwd so remember that     "
+  echo "  ft must be in the same pwd                               "
+  echo "                                                           "
+ ;;
+
+"vimit" )
+  vim $NAMES_list       # /home/$USER/bin/gnamelistM
+  ;;
+
+"show" )
+  list_by_number  $2
+  ;;
+
+"overlay" )
+  echo "Replacing "$NAMES_list" with "$2
+  echo "cat $2 > $NAMES_list"
+  cat $2 > $NAMES_list
+  ;;
+
+"extend" )
+  echo "Extend "$NAMES_list" with "$2
+  cat $2 >> $NAMES_list
+  ;;
+
+"alphakey" )
+  echo "handle as alpha"
+
+  found="no"   
+
+#  if null-line skip it
+#     if char1 of acro is #  skip it
+#        if passed-val is acro  mark found and bail to work
+
+  while  read -r acro filename action rest ; do
+    if [ "." != ".$acro" ]; then
+      if [ ${acro:0:1}  != "#" ]; then
+        if [ "$1" == "$acro" ] ; then
+          found="yes"
+          echo "matched acro : "$acro", filename :" $filename", action :"$action
+          break                                # the quick out when found
+        fi
+      fi 
+    fi
+  done < $NAMES_list       # end read loop from given file_input
+
+# NOT found msg and exit
+  if [ "$found" == "no" ] ; then
+    echo "::                                               "
+    echo ::  acronym  $1  NOT found try . for acrolist 
+    echo "::                                               "
+    exit
+  fi
+
+  cmd_action=""                       # unknow what to do
+  # handling sudo on cmdline  to empower f   
+  sudoit=""                          # defaulting sudoit to null
+  if [ ".$p2" == ".sudo" ] ; then     # found on original cmd line
+    sudoit="sudo"
+  fi
+
+# evaluate for cmd_action value
+# parm 2 in cmdline supercedes
+
+  if [ ".$p2" != ".sudo" ] && [ ".$p2" != "." ] ; then   
+    cmd_action=$p2 
+  fi
+
+# Setting the command  action from line in file_input
+#  remember cmdline parm 2 supercedes (if not sudo)
+  if [ ".$cmd_action" == "." ]; then        # cmd_action not set yet
+    if [ ".$action" == "." ] ; then
+      cmd_action=vim                    # the default
+    else
+      cmd_action=$action                # the override
+    fi  
+  fi
+ 
+
+# The actual work
+
+# Handle ~/whoever   to become     /home/$USER/whoever
+  if [ ${filename:0:1} == "~" ] ; then
+# if [ ".$UID" == ".0" ] ; then     # the root case
+#   lead="/root"
+# else
+#   lead="/home/"$USER      #  non root user
+# fi
+
+    lead=$HOME              # now is /home/$USER   or   /root
+    tailend=${filename:1}   # peel off the ~
+    filename=$lead$tailend  # provide actual name 
+  #echo $filename          # show on screen (just in case)
+  fi
+
+# handle action being sudo
+  if [ ".$action" == ".sudo" ]; then
+    sudoit="sudo"
+    cmd_action="vim"
+  fi
+
+  echo $sudoit $cmd_action $filename
+  $sudoit $cmd_action $filename            # the actual work
+
+  ;;
+
+"numkey" )
+ echo "handle as numeric" $key
+ if in_range $1; then
+   fileline=`head -n$1 $NAMES_list  | tail -n1`
+   # echo "fileline "$fileline
+   thefile=$(echo $fileline | cut -f2 -d' ')
+   #  echo $thefile
+
+   # handle the ~
+   if [ ${thefile:0:1} == "~" ] ; then
+     tailend=${thefile:1}
+     thefile=$HOME$tailend
+   fi
+   cmd_action="vim"        # the default
+   echo $#  num of parms $count
+   if [ $count -gt 1 ]; then
+      echo revise $cmd_action
+      cmd_action="$2 $3 $4 $5"  # allow for 4 parm
+   fi
+   echo $cmd_action $thefile
+   $cmd_action $thefile
+   #     vim $thefile
+ else
+   echo $1 is NOT in RANGE  1 .. $nl
+ fi
+  ;;
+
+ * )  # The default action  
+echo out the default
+  ;;
+esac
+exit 0
+
