@@ -19,9 +19,10 @@ echo " grme parm1 parm2"
 echo "   parm1 - 0  enter the list of name via vim                     "
 echo "         - / in char 1 - remove first char and use as char-str   "
 echo "         - n (numeric) vim to the n-th file in files-to-search.  "
+echo "         - n m   vim +m n-th-file  ( go to line start of line m) "
 echo "         - char-str   value to be grep-ed for                    "
 echo "         - rep  replace the names list by file in parm2          "
-echo "         - out  vim to "$OUTLIST" of found files     "
+echo "         - o  vim to "$OUTLIST" of found files     "
 echo "   parm2 - file name used with 'rep'"
 echo " NOTES ! to search for a number - present /number                "
 echo "         to search for '/string'  present '//string'             "
@@ -49,7 +50,7 @@ fi
 
 # use $1 vim to edit the output of a search
 # u
-if [ ".$1" == ".out"  ]; then
+if [ ".$1" == ".o"  ]; then
    vim $OUTLIST
    exit
 fi
@@ -128,6 +129,10 @@ fi
 #
 #  next line empties OUTLIST from before"
 echo "00 searching for >"$1"< Start line" | tee $OUTLIST 
+echo "Contents below line found, file found   " | tee -a $OUTLIST 
+echo " ## line no,  line contents       " | tee -a $OUTLIST 
+echo " ==>file num in grmelist  filename" | tee -a $OUTLIST 
+echo ".................................." | tee -a $OUTLIST 
 let index=1
   while [ $index -le $nl ]; do
     thefile=`head -n$index $NAMES_list  | tail -n1`
@@ -135,7 +140,7 @@ let index=1
     grep -n $1 $thefile     # this time for the retcode
     grep_retcd=$?                # remember grep return code
     if [ ".$grep_retcd" == ".0" ]; then
-      echo $index   $thefile "<<=== " | tee -a $OUTLIST
+      echo "::===>>"$index   $thefile "<<=== " | tee -a $OUTLIST
     fi
     let index=$index+1
   done
