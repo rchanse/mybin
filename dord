@@ -1,0 +1,63 @@
+#!/usr/bin/env python
+#
+
+import sys
+#  just remember the setup  
+print ("---------------------------------------")
+print("Number of arguments:", len(sys.argv), 'arguments.')
+print("Argument List:", str(sys.argv))
+#print (type(sys.argv))
+#print ( len(sys.argv))
+for i in range(len(sys.argv)):
+  print ("sys.argv[" + str(i) + "]: " + str(sys.argv[i]))
+print ("---------------------------------------")
+
+#
+# necessory inits and imports
+import os, subprocess, datetime, time, calendar, stat, glob
+debug = 0 
+DEBUG_COMMANDS = 1    # show cmds as they happen
+
+def croak(msg):
+    sys.stdout.flush()
+    sys.stderr.write(sys.argv[1] + ": " + msg + "\n")
+    sys.exit(1) 
+
+
+def do_or_die(dcmd, mute=True):
+    """
+    print ("hi dord taken from rsc  do_or_die by ESR ")
+    "Either execute a command or die."
+    """
+    if debug == 0 and mute:
+        muteme = " >/dev/null 2>&1"
+    else:
+        muteme = ""
+    if debug >= DEBUG_COMMANDS:
+        sys.stderr.write("executing '%s'\n" % (dcmd))
+    try:
+        retcode = subprocess.call("(" + dcmd + ")" + muteme, shell=True)
+        if retcode < 0:
+            croak("%s was terminated by signal %d." % (repr(dcmd), -retcode))
+        elif retcode != 0:
+            errmsg = "%s returned %d." % (repr(dcmd), retcode)
+            croak(errmsg)
+    except (OSError, IOError) as e:
+        croak("execution of %s failed: %s" % dcmd)
+
+if __name__ == "__main__":
+
+    cmd_found = False
+    if len(sys.argv) > 1:
+        cmd_found = True
+    else:
+        print("NO command provided, Sorry.")
+        print("sys.argv[0]: ",sys.argv[0])
+        sys.exit(1)
+
+    if cmd_found:
+        cmd = sys.argv[1]
+        for i in range(2,len(sys.argv)):
+            cmd = cmd + " " + sys.argv[i]
+
+    do_or_die(cmd,mute=False)

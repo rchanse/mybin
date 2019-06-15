@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# short cut to  ~, bin, bintest, mybin  bintest/.src files
+#  by way of    h   b     bt      m        s
+# get to this exec by either vball char file  or
+# set up alias 
+#  alias x='vball h '
+#  alias xb='vball b '
+#  alias xbt='vball bt '
+#  alias xm='vball m '
+
+p=$1
+q=$2
+
+case $p in
+"h" )
+  vim ~/$2
+  ;;
+"b" )
+  vim ~/bin/$2
+  ;;
+"bt" )
+  vim ~/bintest/$2
+  ;;
+"s" )
+  vim ~/bintest/.src/$2
+  ;;
+"sn" )
+  nano ~/bintest/.src/$2
+  ;;
+"m" )
+  vim ~/mybin/$2
+  ;;
+ * )
+  echo "vim key file "
+echo "short cut to  ~, bin, bintest, mybin  bintest/.src files"
+echo " by way of    h  b    bt       m      s   "
+esac  
+
