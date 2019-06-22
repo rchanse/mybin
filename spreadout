@@ -1,5 +1,24 @@
 #!/usr/bin/env bash 
 
+# check directory function
+# REMEMBER bash function do NOT return cond code - use shared variable
+function chk_dir(){
+    # usage  chk_dir $1 $2   $1 - dir to check, $2 - error code value   
+    #  the answer  (0, $2) is placed in variable  chk_dir_cc
+
+    a_dir=$1
+    if [[ -d $a_dir ]]; then    
+        echo $a_dir "is a currently existing directory : OK!! " 
+	    let chk_dir_cc=0
+    else
+	let rc=$2
+        echo "  "
+        echo $a_dir "is does NOT exist as a directory -- rc : "$rc
+        echo "  "
+	    let chk_dir_cc=$rc
+    fi
+}
+
 echo -n "Did you make the binbin fix? YyNn : "
 
 read answer tail
@@ -33,43 +52,27 @@ fi
 #  a. insure ~/bin  ~/.vim  ~/.vim/colors  directories exist.
 
 # check directory function
-function chk_dir(){
-    # t parms  first parm  dir to check, second parm retcode if not exist
 
-    a_dir=$1
-    if [[ -d $a_dir ]]; then    
-        echo $a_dir "is a currently existing directory : OK!! " 
-	return 0
-    else
-	let rc=$2
-        echo $a_dir "is does NOT exist as a directory -- rc : "$rc
-	return $rc
-    fi
-}
-
-let continue_cc=0
 # get to user root dir
 cd
 
 chk_dir bin 1 
-  let continue_cc=$?
-
-if [ $continue_cc = 0 ]; then
-  chk_dir .vim 2
-  let continue_cc=$?
-else
-  echo check stmt above
+if [ $chk_dir_cc != 0 ]; then
+  echo  "See above line,   I QUIT. (1)"
+  exit
+fi  
+chk_dir .vim 1 
+if [ $chk_dir_cc != 0 ]; then
+  echo  "See above line,   I QUIT. (2)"
   exit
 fi  
 
-if [ $continue_cc = 0 ]; then
-  chk_dir .vim/colors 3 
-  let continue_cc=$?
-else
-  echo check stmt above
+chk_dir .vim/colors 1 
+if [ $chk_dir_cc != 0 ]; then
+  echo  "See above line,   I QUIT. (3)"
   exit
 fi  
-#!/usr/bin/env bash
+
 savewhere=$PWD
 echo -n "Enter suffix for backup to my bin dir : "
 read answer tail
@@ -105,7 +108,7 @@ function file_exist_check (){
    FileToCheck=$1
    if [ -f $FileToCheck ]; then
    echo "$FileToCheck is a bin member  NO NO -- FIX this"
-   exit
+   # exit
 else
    echo "$FileToCheck is not a bin directory member  Good Good."
 fi
@@ -142,7 +145,8 @@ echo "got past copy-ing nonbin files to backupbin":
 #  f. copy overlay this directory mybin or raspbin into ~/bin
 #     overlaying existing member of the same name
 
-'cp' -rav $HOME/raspbin/. $HOME/binbin/
+'cp' -rav $HOME/mybin/. $HOME/bin/
+#'cp' -rav $HOME/raspbin/. $HOME/binbin/
 #  g. move (I said MOVE) the non-bin member to the correct places
 
    mv -v   $HOME/bin/.profile        ~/.profile
@@ -154,3 +158,4 @@ echo "got past copy-ing nonbin files to backupbin":
 
 #  h. source .profile  or  logoff/logon
 #  NOTE on backout  (overlay ~/bin with the backup (see c.) andj
+
