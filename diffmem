@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+mem=$1
+file1=$2
+file2=$3
+
+echo $1 "1" $1 '2' $3 '3'
+echo $mem $file2 $file2
+showonly=False
+if [ ".$file1" = ".show" ]; then
+    showonly=True
+fi
+
+if [ ".$file1" = ".." ]; then
+ 
+    showonly=True
+fi
+
+if [ "$mem." = "." ]; then
+    echo "One parm required"
+    echo "usage diffm x y z  is  diff y/z  z/x   or # to have a pair"
+    showonly=True
+fi
+
+file1=$2
+file2=$3
+
+if [ ".$2" == ".1" ]; then
+    file1="/home/rchansen/bin"
+    file2="/home/rchansen/bintest"
+    echo "for  1.  file1 ~/bin   file2 /bintest"
+fi
+
+if [ ".$2" == ".2" ]; then
+    file1="/home/rchansen/bin"
+    file2="/home/rchansen/mybin"        
+    echo "for  2.  file1 ~/bin   file2 /mybin"
+fi
+
+if [ ".$2" == ".3" ]; then
+    file1="/homr/rchansen/bintest"
+    file2="/home/rchansen/mybin"
+    echo "for  3.  file1 ~/bintest   file2 /mybin"
+fi
+echo "showonly "$showonly
+if  [ ".$showonly" == ".True" ]; then
+    echo "for  1.  file1 ~/bin   file2 /bintest"
+    echo "for  2.  file1 ~/bin   file2 /mybin"
+    echo "for  3.  file1 ~/bintest   file2 /mybin"
+    exit
+fi
+    
+
+f1=$file1"/"$mem
+f2=$file2"/"$mem
+echo $f1  $f2
+diff $f1 $f2
+diffcc=$?
+if [ $diffcc = 0 ]; then
+    echo diff $f1 "EQUALS" $1
+fi
