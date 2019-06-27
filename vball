@@ -35,4 +35,3 @@ case $p in
 echo "short cut to  ~, bin, bintest, mybin  bintest/.src files"
 echo " by way of    h  b    bt       m      s   "
 esac  
-
