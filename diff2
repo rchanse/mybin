@@ -124,18 +124,14 @@ case "$action" in
   echo "       show  n    - 10 entries in list     "
   echo "                     starting at n         "
   echo "        0         - vim $NAMES_list        "
-  echo "        n         - vim entry n            "
-  echo "        q  value  - q(uickly) locate files  "
-  echo "              with value in name and put   "
-  echo "              in list file                 "
   echo "                                           "
   echo "  diff2  #1  #2    do diff on two files    "
   echo "                      or directories       "
   echo "                                           "
-
-  echo "  list file is $NAMES_list                 "
-  echo "                                           "
-  echo "                                           "
+  echo "  If there is a parm 3  it is a member     "
+  echo "  and you will  diff #1/prm3  #2/prm3      "
+  echo " Tip: if you have a lot of member to       "
+  echo " check diff2 0 and edit to put in dirs.    "
  ;;
 
 "vimit" )
@@ -174,6 +170,11 @@ if [ $getrc == 0 ]; then
   name2=$thefile
 fi
 echo $thefile
+
+if [ ".$3" != "." ];then     #if third parm provide it is a member name
+    name1=$name1"/"$3
+    name2=$name2"/"$3
+fi 
 
 echo $name1 $name2
 
