@@ -1,0 +1,106 @@
+#!/usr/bin/env python
+"""  this is the pgm to check bin and mybin to see if they are in sync.
+  necessary prep work:
+      ls -a ~/bin > /tmp/lsbin                get a list of bin members
+      ls -a ~/mybin > /tmp/lsmybin            get a list of mybin members
+    python checkfile.py > t       output to screen is too fast.
+    """
+
+import sys
+#
+# necessory inits and imports
+import os, subprocess, datetime, time, calendar, stat, glob
+debug = 0 
+DEBUG_COMMANDS = 1    # show cmds as they happen
+
+def do_or_die(dcmd, mute=True):
+    """print ("hi dord taken from rsc  do_or_die by ESR ")
+    "Either execute a command or die."
+    """
+    if debug == 0 and mute:
+        muteme = " >/dev/null 2>&1"
+    else:
+        muteme = ""
+#   if debug >= DEBUG_COMMANDS:
+    try:
+        retcode = subprocess.call("(" + dcmd + ")" + muteme, shell=True)
+        if retcode == 0:
+           return 0  #print(mem + " bin/mybin MATCH.")
+        elif retcode < 0:
+            print("%s was terminated by signal %d." % (repr(dcmd), -retcode))
+        elif retcode != 0:
+            errmsg = "%s returned %d." % (repr(dcmd), retcode)
+            print(errmsg)
+    except (OSError, IOError) as e:
+        croak("execution of %s failed: %s" % dcmd)
+
+def do_header(msg):
+    print ("++================================================++")
+    print ("++")
+    print ("++ "+msg) 
+    print ("++")
+    print ("++================================================++")
+
+def croak(msg):
+    sys.stdout.flush()
+    sys.stderr.write(sys.argv[1] + ": " + msg + "\n")
+    sys.exit(1) 
+
+def mklist(alist, afile):
+    ''' open a file (afile)  and extend elt to a list (alist '''
+    tmpfile = afile
+    tf = open(tmpfile,'r')
+    for mem in tf:
+        m = mem.strip()
+        alist.append(m)
+    tf.close()
+    return alist
+
+bin_mems = []
+mybin_mem = []
+cmd = "ls -a /home/rchansen/bin > /tmp/lsbin"
+do_or_die(cmd,mute=False)
+cmd = "ls -a /home/rchansen/mybin > /tmp/lsmybin"
+do_or_die(cmd,mute=False)
+
+bin_mems = mklist(bin_mems,"/tmp/lsbin")
+mybin_mem = mklist(mybin_mem, "/tmp/lsmybin")
+both_lists = []
+
+do_header("Show members only in ~/bin ")
+for mem in bin_mems:
+    if mem not in mybin_mem:
+        print(mem.ljust(10) + " Only in bin")
+    else:
+        both_lists.append(mem)  # found on both file
+
+do_header("Show members only in ~/bin ")
+for mem in mybin_mem:
+    if mem not in bin_mems:
+        print (mem.ljust(10) + " Only in mybin")
+#   else:
+#       print( mem," in bin")
+
+skip_list = [".", "..", "f_acrolist", "g2namelist", "gnamelist",
+"grdirnamelist", "grmelist", "cdit", "diff2list"]
+
+# Echo out both_lists  show files to compare
+do_header(" List of member in BOTH bin/mybin")
+for i in range(len(both_lists)):
+    print("both_lists[" + str(i) +  "]=" + str(both_lists[i]) + " " +
+    str(len(str(both_lists[i]))))
+ 
+do_header("list of members to skip when  diff - ing them")
+print(skip_list)
+
+do_header("Result of diffing members in both")
+for mem in both_lists:
+    if mem in skip_list:
+        print ("skip this file :" + mem)
+    else:
+#        print ("comparing bin and mybin :" + mem)
+        cmd = "diff ~/bin/"+mem+" ~/mybin/"+mem
+        do_or_die(cmd,mute=False)
+
+quit(0)
+
