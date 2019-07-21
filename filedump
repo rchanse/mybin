@@ -19,8 +19,7 @@ else
   dumpoffset=$3
 fi
 
-echo $1 $2 $3
-echo $1 $dumplen $dumpoffset
+echo filename:$1  length: $2   offset: $3
 if [ -f $1 ]; then
   # see hex dump man page for parms
   #  C format n length to dump   s offset from start of file

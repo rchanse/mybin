@@ -93,11 +93,10 @@ case "$action" in
   ;;
 
 "help" )   # provide syntax     no parms or parm1=help
-  echo "  list file is $NAMES_list                 "
-  echo "                                           "
-  echo "  you will be look in the $PWD for a desired value"
-  echo "                                           "
-  echo " populate list file with  grdir rep somename  "
+  echo "  1. make the desired dir to search  PWD   "
+  echo "  2. grep [-Rn or -n] desired string > file"
+  echo "  3. grdir rep file    (put file in namelist"
+  echo "  4. grdir 0 to see list; grdir n to desired file"
   echo "                                           "
   echo " line items have  filename:line#:line info ; code win use cut -d:"
   echo " to split lines and use   vim +position filename  "

@@ -1,0 +1,114 @@
+#!/bin/bash
+
+#Set default values
+action=$1                                 # default for case
+let count=$#
+
+NAMES_list=$HOME/bin/getnthlist  # non-root file with list of names
+
+if [ ".$action" == ".0" ]; then
+    vim $NAMES_list
+    exit 0
+fi
+
+# get number in list
+if [ -f $NAMES_list ]; then
+  nl=`wc $NAMES_list | awk '{print $1}'`  
+  # nl is the number of entries in list of names
+fi
+
+
+# start of mainline
+# if [ $# = 0 ]; then            # alternate setup for help
+#    echo "print the help info"
+#    action=help
+# fi
+
+if [ ".$1" == "." ] || [ ".$1" == ".." ]; then 
+   action=help
+fi
+if [ ".$1" == ".0" ]; then 
+  action=doit
+fi
+
+if [ "$1" == "rep" ]; then
+  action=overlay
+  echo $action
+fi
+
+if [ "$1" == "add" ]; then
+  action=extend
+fi
+
+
+case "$action" in
+
+"noop" )
+  ;;
+
+"help" )   # provide syntax     no parms or parm1=help
+  echo "  Function: get the n-th element is a file and act on it"
+  echo "                                           "
+  echo "  Syntax: getnth p1 p2 p2 p4                       "
+  echo "       p1 - number in file to get item     "
+  echo "            p1 = 0  shows the list         "
+  echo "       p2 p3 p4  command to invoke  p1     "
+  echo "       default is p2,3,4 null is echo    "
+  echo "                                                           "
+  echo "       rep  file  - overlay list with file "
+  echo "       add  file  - concat file to list    "
+  echo "                                                           "
+  echo "  list file is $NAMES_list                 "
+ ;;
+
+
+"overlay" )
+  echo "Replacing "$NAMES_list" with "$2
+  echo "cat $2 > $NAMES_list"
+  cat $2 > $NAMES_list
+  ;;
+
+"extend" )
+  echo "Extend "$NAMES_list" with "$2
+  cat $2 >> $NAMES_list
+  ;;
+
+ * )  # The default action  
+
+#    is_integer $1; then
+if ! [ "$1" -eq "$1" ] 2> /dev/null
+then
+  echo "Sorry integers only, I quit"
+  exit
+fi
+
+# function in_range() {
+# checking for an integer is in range  between 1 and nl
+if [ $1 -ge 1 ] && [ $1 -le $nl ] ; then
+  echo $1 is in range 1 $nl
+else
+  echo "Out of range, I quit"
+  exit
+fi
+
+theitem=`head -n$1 $NAMES_list  | tail -n1`
+echo $theitem  "<"
+# handle the ~
+if [ ${theitem:0:1} == "~" ] ; then
+  tailend=${theitem:1}
+  theitem=$HOME$tailend
+fi
+
+cmd_action="echo "        # the default  just show it
+echo $#  num of parms $count
+
+if [ $count -gt 1 ]; then
+  echo revise $cmd_action
+  cmd_action="$2 $3 $4 $5"  # allow for 4 parm
+fi
+
+echo $cmd_action $theitem
+$cmd_action $theitem
+  ;;
+esac
+exit 0
