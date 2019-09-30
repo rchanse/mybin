@@ -1,0 +1,147 @@
+#!/usr/bin/env python3
+import sys, os
+import subprocess, datetime, time, calendar, stat, glob
+debug = 0
+
+def do_or_die(dcmd, mute=True):
+
+    """print ("hi dord taken from rsc  do_or_die by ESR ")
+    "Either execute a command or die."
+    """
+    if debug == 0 and mute:
+        muteme = " >/dev/null 2>&1"
+    else:
+        muteme = ""
+#   if debug >= DEBUG_COMMANDS:
+    try:
+        retcode = subprocess.call("(" + dcmd + ")" + muteme, shell=True)
+        if retcode < 0:
+            print("%s was terminated by signal %d." % (repr(dcmd), -retcode))
+        elif retcode != 0:
+            errmsg = "%s returned %d." % (repr(dcmd), retcode)
+            print(errmsg)
+#        else:
+        return retcode
+    except (OSError, IOError) as e:
+        croak("execution of %s failed: %s" % dcmd)
+
+def croak(msg):
+    sys.stdout.flush()
+    sys.stderr.write(sys.argv[0] + ":: " + msg + "\n")
+    sys.exit(1) 
+
+def mklist(alist, afile):
+    ''' open a file (afile)  and extend elt to a list (alist '''
+    tmpfile = afile
+    tf = open(tmpfile,'r')
+    for mem in tf:
+        m = mem.strip()
+        alist.append(m)
+    tf.close()
+    return alist
+
+"""
+D =input("Enter directory1 directory2: ")
+dirs = D.split()
+if len(dirs) < 2:
+    croak("Not enough input nee 2 dir-s")
+dir1 = dirs[0]
+dir2 = dirs[1]
+"""
+
+# change to get from cmdline
+if len(sys.argv) < 2:
+    print ("") 
+    cmd ="Two directories required "
+    print ("Synax: chk2dir  dir1 dir2 ")
+    croak(cmd)
+
+dir1 = sys.argv[1]
+dir2 = sys.argv[2]
+
+home_dir = os.environ['HOME']
+print("home_dir:",home_dir)
+print (dir1)
+if dir1[0:1] == "/" :
+    dir1 = dir1
+elif dir1[0:1] == "~":
+    dir1 = home_dir + dir1[1:]
+else:
+    dir1 = home_dir + "/" + dir1
+
+print ("directory 1:",dir1)
+
+if dir2[0:1] == "/" :
+    dir2 = dir2
+elif dir2[0:1] == "~":
+    dir2 = home_dir + dir2[1:]
+else:
+    dir2 = home_dir + "/" + dir2
+
+print ("directory 2:",dir2)
+if not os.path.isdir(dir1):
+    msg = dir1 + " is NOT a dir"
+    croak(msg)
+
+if not os.path.isdir(dir2):
+    msg = dir2 + " is NOT a dir"
+    croak(msg)
+
+cmd = "ls -a " +dir1 + " > /tmp/dir1"
+do_or_die(cmd,mute=False)
+cmd = "ls -a " +dir2 + " > /tmp/dir2"
+do_or_die(cmd,mute=False)
+
+dir1_mems = []
+dir2_mems = []
+dir1_mems = mklist(dir1_mems, "/tmp/dir1")
+dir2_mems = mklist(dir2_mems, "/tmp/dir2")
+both_lists = []
+
+def do_header(msg):
+    print ("++================================================++")
+    print ("++")
+    print ("++ "+msg) 
+    print ("++")
+    print ("++================================================++")
+
+
+header = "Members found only in " + dir1
+do_header(header)
+
+for mem in dir1_mems:
+    if mem not in dir2_mems:
+        prtit = mem.ljust(10) + " only in " + dir1
+        print(prtit)
+    else:
+        both_lists.append(mem)
+
+
+header = "Members found only in " + dir2
+do_header(header)
+
+for mem in dir2_mems:
+    if mem not in dir1_mems:
+        prtit = mem.ljust(10) + " only in " + dir2
+        print(prtit)
+# If these are uncommented  both_lists will be dbl counted
+#   else:
+#       both_lists.append(mem)
+
+header = "Members in both " + dir1 + " and " + dir2
+do_header(header)
+for mem in both_lists:
+    f1 = dir1 + "/" + mem
+    f2 = dir2 + "/" + mem
+    cmd = "cmp " + f1 + " " + f2
+    retcode = subprocess.call("("+cmd+")",shell=True)
+    if retcode == 0:
+        equal = " OK."
+    else:
+        equal = " Not Equal."
+    prtit = mem.ljust(10) + " in both directories. "+equal
+    print(prtit)
+
+# cmd = "ls"      # not-there"
+# n = do_or_die(cmd,mute=True)
+# print(n)
