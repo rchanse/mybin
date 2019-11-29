@@ -5,13 +5,16 @@
 # to turn then back off   fdebug=    anything but ON
 # surround your desire echo debug by
 
+# to turn then back off   fdebug=    anything but ON
+# surround your desire echo debug by
+
 
 #  if [ ".$fdebug" == ".ON" ]; then
   # whaterever echo stmt you wish
 #  fi
 
 function ech0 () {               # set  debug=ON  export debug
-  if [ ".$debug" == ".ON" ]; then
+  if [ ".$fdebug" == ".ON" ]; then
     echo $@
   fi  
 }
@@ -28,8 +31,18 @@ function nop() {    # a NO-OP to make code more readable later
 }
 
 #  Below is the acro file (name of acro filename action    file )
-acro_file=$HOME"/bin/ff_acrolist"
-acro_file=$HOME"/bin/f_acrolist"
+nl=`wc $HOME/bin/acrofile_name | awk '{print $1}'`
+echo $nl
+wc $HOME/bin/acrofile_name
+cat $HOME/bin/acrofile_name
+if [ ".$nl" == ".1" ]; then
+  echo if worked
+  acroname=`head -n1 $HOME/bin/acrofile_name | tail -n1`
+  acro_file=$acroname
+else
+  echo fell through to else
+  acro_file=$HOME"/bin/ff_acrolist"
+fi
 
 # save cmdline parms for later
 p1=$1                         # first parm
