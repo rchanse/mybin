@@ -1,0 +1,141 @@
+  .     ~/bin/f_acrolist  
+  dot   ~/bin/f_acrolist  
+  .t        /home/rchansen/tmplist
+  Tkinter  /usr/lib/python2.7/lib-tk/Tkinter.py  less
+  acrovim   ~/.vim/f_acrolist  
+  apachealog  /var/log/httpd/access_log
+  apacheconf /etc/apache2/apache2.conf
+  apachedoc /usr/share/doc/apache2/README.Debian.gz
+  apacheelog  /var/log/apache2/error.log              
+  apachevars /etc/apache2/envvars        
+  bashrc   ~/.bashrc
+  bin     ~/bin    
+  binf     ~/bin/f  ls -al
+  binmovelog ~/binmove.log
+  bml     ~/binmove.log
+  cdit      /home/rchansen/bin/cdit
+  cdit.     ~/.local/bin/cdit
+  cheat    ~/Downloads/LinuxCommandLineCheatSheet.pdf xpdf
+  colomine /home/rchansen/.vim/colors/mine.vim
+  colordoc /home/rchansen/.vim/colors/colordoc
+  colotest /home/rchansen/.vim/colors/test.vim
+  complete /usr/share/bash-completion/bash_completion
+  ct       ~/blc/contents
+  debref  /home/rchansen/Documents/Manuals/debian-reference.en.txt
+  debug   ~/.de_bug
+  dj22doc  https://docs.djangoproject.com/en/2.2/    firefox
+  dnsinfo  /etc/resolv.conf
+  doku     /var/www/html/dokuwiki
+  dopw /var/www/html/dokuwiki/data/pages/rch/passwords.txt
+  dosec /var/www/html/dokuwiki/conf/acl.auth.php 
+  drchurch /home/rchansen/python/books/pythonlearn.pdf  evince
+  drchurch /home/rchansen/python/books/pythonlearn.pdf  evince
+  DrCpdf   /home/rchansen/python/DrChuck/rch/code3/pythonlearn.pdf  evince
+  drcnet   /home/rchansen/python/DrChuck/rch/net-intro.pdf          evince
+  drcpdf   /home/rchansen/python/DrChuck/rch/code3/pythonlearn.pdf  evince
+  DrCcode  /home/rchansen/python/DrChuck/rch/code3
+  f        ~/bin/f
+  fbin     ~/bintest/f
+  f$       /home/rchansen/bin/f
+  f+        /home/rchansen/bin12oct16/f
+  fold       /home/rchansen/bin/fold
+  fold       ~/bin/fold
+  ftpconf  /etc/vsftpd.conf   sudo vim
+  g        /home/rchansen/bin/g                           
+  g12      ~/bin12oct16/g                           
+  gitinfo ~/git-projects/an_intro/rchme   nano
+  google    https://www.google.com    firefox
+  goto   ~/Documents/Dijkstra_Goto.pdf  evince
+  grp     /home/rchansen/python/zelle/$USER/graphics.py
+  grpy     /home/rchansen/python/zelle/rchansen/graphics.py
+  grubdoc  /usr/share/info/grub.info.gz      
+  hostname /etc/hostname
+  hosts    /etc/hosts
+  howdo /home/rchansen/Documents/books/J_Clark_Scott-But_How_Do_It_Know_-_The_Basic_Princ.pdf  evince
+  idle     /usr/lib/python2.7/idlelib/idle.py  less
+  japdoc    ~/tn/japneuro
+  japn     ~/tn/japn     
+  japneuro  ~/tn/japneuro
+  jpj ~/tkinter/JPJones/rch
+  jpjrch  ~/tkinter/JPJones/rch
+  jpjrch ~/python/tkpysnips/rch
+  knr     ~/Documents/knr.pdf   evince
+  knrpdf    ~/Documents/knr.pdf   xpdf
+  learnpy  ~/pycode/learningpython.pdf xpdf  
+  learnpye ~/pycode/learningpython.pdf evince
+  l2pgmc  ~/blp/learn2pgmC/c_tutorial/rchnotes
+  logisim ~/logisim/logisim-generic-2.1.1.jar   java -jar
+  loveslinux ~/blp/Books/linux.pdf    evince
+  lpthw    ~/python/lpthw/lpthw.pdf     xpdf
+  mcini   /home/rchansen/.config/mc/ini                 
+  mine    ~/.vim/colors/mine.vim
+  nbdjnotes /home/rchansen/Develop/nbdjango/rchnotes
+  netif    /etc/network/interfaces  
+  nginx ~/git-projects/Books/Complete-NGINX-Cookbook-2019.pdf  evince
+  pdbdoc   /usr/lib/python2.7/pdb.doc
+  phone    ~/tn/phone
+  phonedoc ~/Documents/Manuals/ATT_Z222.pdf  evince
+  profile  ~/.profile
+  progit /home/rchansen/git-projects/Books/progit-en.1084.pdf evince
+  progitx /home/rchansen/git-projects/gitstuff/progit-en.1084.pdf xpdf 
+  psw      ~/tn/password
+  pycook   ~/Documents/pythoncookbook.pdf   evince
+  pydoc     ~/python/2.7.16-docs
+  pyevery /home/rchansen/python/books/pythonlearn.pdf  evince
+  pylint    ~/python/books/pylint.pdf   evince
+  pypdf    ~/pycode/learningpython.pdf evince
+  pysyn    /usr/share/vim/vim74/syntax/python.vim
+  pyv5     ~/pycode/learningpython.pdf xpdf  
+  qnote    ~/tn/qnote
+  readbit  ~/tkinter/bitcoin/README.rch
+  scam   ~/temp/scam
+  scr      ~/git-projects/ESR-src/README
+  ss       ~/bintest/ss.py
+  startxfce4 /usr/bin/startxfce4
+  stdio    /usr/include/stdio.h
+  stdlib   /usr/include/stdlib.h
+  stringh  /usr/include/string.h
+  sudohosts    /etc/hosts  sudo
+  t         ~/.t
+  tclpgm   ~/python/books/tkbook.pdf evince
+  tempname ~/tempname
+  testing ~/testing
+  theodoro  /home/rchansen/tn/Theodoro
+  timeit   ~/timeit_log
+  tmc      ~/tmux.conf
+  tk27     /usr/lib/python2.7/lib-tk/Tkinter.py
+  tkpyrch ~/python/tkpysnips/rch
+  tkref    ~/python/books/tkinter.pdf  evince
+  tmplist  /home/rchansen/tmplist              
+  tmplst  /home/rchansen/tmplst              
+  tn        /home/rchansen/tempname
+  tn       ~/tempname
+  t       ~/t
+  tls     ~/t  ls -al
+  trydjrch ~/Develop/trydjango/rchnotes
+  trydjrch ~/dev/trydjango/rchnotes
+  turtle   /usr/lib/python2.7/lib-tk/turtle.py
+  urls https://docs.djangoproject.com/en/2.0/topics/http/urls/  firefox
+  uservbox ~/Downloads/virtualbox/UserManual.pdf   xpdf
+  v5e      ~/pycode/learningpython.pdf evince
+  v5x      ~/pycode/learningpython.pdf xpdf  
+  vbox ~/VBox/UserManual.pdf   xpdf
+  vboxe ~/VBox/UserManual.pdf   evince
+  vboxpgm  ~/VBox/SDKRef.pdf   evince
+  vimbook /home/rchansen/Documents/books/vimbook-OPL.pdf  xpdf
+  vimbook1 /home/rchansen/Documents/books/vimbook-OPL.pdf  evince
+  vimrc    /home/rchansen/.vimrc
+  vinrch   ~/Develop/vincentdj/rchnotes
+  wf  ~/blp/learn2pgmC/wherefrom
+  whatis   /home/rchansen/bin/whatis 
+  whoami  ~/whoami
+  xkb   /usr/share/X11/xkb
+  zelle   /home/rchansen/python/zelle/rchansen 
+  zellepage   /home/rchansen/python/zelle/rchansen/page 
+  zellepdf /home/rchansen/python/zelle/zellepythonbook.pdf  xpdf
+  zellepdf1 /home/rchansen/python/zelle/zellepythonbook.pdf   evince
+ #    format of acro file     (action=null -> vim   
+ #   acronym       filename	         action to take  none/null = vim
+ #  if parm3 (action) is sudo  then  'sudo vim filename'  is issued
+ # if first non blank is "#" the line is a comment and bypassed
+thinkpy /home/rchansen/Documents/Manuals/thinkpython.pdf evince
