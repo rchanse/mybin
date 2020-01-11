@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if [ $# = 1 ]; then
+  locate $1 > ~/tempname
+  exit
+fi
+
+if [ ".$2" == ".g" ]; then
+  locate $1 > ~/tempname
+  gg rep ~/tempname
+fi
+
+if [ ".$2" == ".gg" ]; then
+  locate $1 > ~/tempname
+  gg rep ~/tempname
+fi
