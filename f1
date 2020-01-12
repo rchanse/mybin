@@ -38,7 +38,7 @@ cat $HOME/bin/ff_acroname
 if [ ".$nl" == ".1" ]; then
   echo if worked
   acroname=`head -n1 $HOME/bin/ff_acroname | tail -n1`
-  acro_file=$HOME/bin/ff_acrolist_dir/$acroname
+  acro_file=$HOME/bin/ff_acroname_dir/$acroname
 else
   echo fell through to else
   acro_file=$HOME"/bin/f1_acrolist"

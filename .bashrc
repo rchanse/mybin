@@ -123,7 +123,7 @@ fi
 # for virtualenv tesing
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/Devel
-source /usr/local/bin/virtualenvwrapper.sh
+#  source /usr/local/bin/virtualenvwrapper.sh
 
 # ssh login to my same id only provide last 2 digits 
 # Mon 14 Jan 2019 11:11:02 AM CST
@@ -144,4 +144,4 @@ if [ -f /usr/share/git-core/contrib/completion/git-prompt.sh ]; then
     export PS1='[\u@\h \W$(__git_ps1 " (%s)")]\$ ' 
 fi
 
-. /usr/local/bin/virtualenvwrapper.sh
+# . /usr/local/bin/virtualenvwrapper.sh

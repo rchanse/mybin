@@ -16,7 +16,7 @@ Description: driver for aternative-f routine where the acronym list
 parm
   null - shows this help information and current value of member-name.
   .    - enter the new acronym list file
-  on   - prompt(s) and set(s) the  ~/bin/ff_acronym_dir/ member-name
+  on   - prompt(s) and set(s) the  ~/bin/ff_acroname_dir/ member-name
   off  - clear the member-name
   otherwise acts like f with up to three parms.
 
