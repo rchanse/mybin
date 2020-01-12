@@ -87,13 +87,13 @@ if [ $chk_dir_cc != 0 ]; then
    mkdir bin/g_acrolist_dir
 fi 
 
-fchk_dir .vim/colors 1 
+chk_dir .vim/colors 1 
 if [ $chk_dir_cc != 0 ]; then
 #  echo  "See above line,   I QUIT. (3)"
 #  exit
    echo mkdir .vim/colors
    mkdir .vim/colors
-fi i 
+fi  
 savewhere=$PWD
 echo -n "Enter suffix for backup to my bin dir : "
 read answer tail
@@ -176,6 +176,8 @@ echo "got past copy-ing nonbin files to backupbin":
    mv -v   $HOME/bin/.vimrc          ~/.vimrc
    mv -v   $HOME/bin/FF_acrolist     ~/.vim/FF_acrolist 
    mv -v   $HOME/bin/mine.vim        ~/.vim/colors/mine.vim
+   cp -v   $HOME/mybin/.bashrc       ~/bin/.bashrc
+   cp -v   $HOME/mybin/.bash_aliases ~/bin/.bash_bash_aliases
 
 #  h. source .profile  or  logoff/logon
 #  NOTE on backout  (overlay ~/bin with the backup (see c.) andj
