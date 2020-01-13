@@ -3,7 +3,7 @@
 # Notes and needs for this script
 # 1. script f1 for this to call  ( like f with acrolist  f1_acrolist
 # 2. file ~/bin/f1_acrolist   default
-# 3. file ~/bin/ff_acroname   holds the member-name across calls
+# 3. file ~/bin/acrofile_name   holds the member-name across calls
 # 4. director ~/bin/ff_acrofile_dir  sub dir of acrolists
 #
 
@@ -16,7 +16,7 @@ Description: driver for aternative-f routine where the acronym list
 parm
   null - shows this help information and current value of member-name.
   .    - enter the new acronym list file
-  on   - prompt(s) and set(s) the  ~/bin/ff_acroname_dir/ member-name
+  on   - prompt(s) and set(s) the  ~/bin/ff_acronym_dir/ member-name
   off  - clear the member-name
   otherwise acts like f with up to three parms.
 
@@ -28,21 +28,19 @@ EOF
 if [ ".$1" == "." ]; then
   usage
 
-  if [ !-f ]; then
-    touch $HOME/bin/ff_acroname
-  fi
+  touch $HOME/bin/ff_acroname
 
   nl=`wc $HOME/bin/ff_acroname |  awk '{print $1}'`
 
   acroname=""
   if [ ".$nl" == ".0" ]; then
-    echo "Current acrolist is ~/bin/acrolist_name/f1_acrolist"
-	exit
+    echo "Current acrolist is ~/bin/ff_acrolist"
   else
     acroname=`head -n1 $HOME/bin/ff_acroname | tail -n1`
     echo "$acroname - Current acrolist is ~/bin/ff_acroname_dir/$acroname"
-    exit 
   fi
+
+  exit
 fi
 
 p1=$1
@@ -51,10 +49,10 @@ if [ ".$p1" == ".off" ]; then
 fi
 
 if [ ".$p1" == ".OFF" ]; then 
-  rm $HOME/bin/ff_acroname
+  rm $HOME/bin/ff_acroname               # clear by deleting
   sleep 1
-  touch $HOME/bin/ff_acroname
-#  nl=`wc $HOME/bin/ff_acroname`
+  touch $HOME/bin/acrofile_name          # reallocate empty
+#  nl=`wc $HOME/bin/acrofile_name`
 #  echo  $nl $nl
   exit 
 fi
@@ -69,13 +67,13 @@ if [ ".$p1" == ".ON" ]; then
    read answer   rest
    acroparm=$answer  
    echo $acroparm > $HOME/bin/ff_acroname
-   echo "Using 2>"$acroparm"< for acrofile name."
+   echo "Using 2>"$acroparm"< for acrofile member name."
    cat $HOME/bin/ff_acroname
    exit
 fi
 #echo acroparm is ">"$acroparm"<"
 
+echo f1 $1 $2 $3
 f1 $1 $2 $3
-
 
 

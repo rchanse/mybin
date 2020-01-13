@@ -30,20 +30,20 @@ function nop() {    # a NO-OP to make code more readable later
   return 0
 }
 
-#  Below is the acro file (name of acro filename action    file )
+# the list of acronyms is 
+#  ff_acrolist  if  ~/bin/ff_acroname is empty
+#  ~/bin/ff_acroname_dir/member  if  ~/bin/ff_acroname contains member
+
 nl=`wc $HOME/bin/ff_acroname | awk '{print $1}'`
-echo $nl
-wc $HOME/bin/ff_acroname
-cat $HOME/bin/ff_acroname
-if [ ".$nl" == ".1" ]; then
-  echo if worked
-  acroname=`head -n1 $HOME/bin/ff_acroname | tail -n1`
-  acro_file=$HOME/bin/ff_acroname_dir/$acroname
+if [ ".$nl" == ".0" ]; then
+  acro_file=$HOME/bin/ff_acrolist
 else
-  echo fell through to else
-  acro_file=$HOME"/bin/f1_acrolist"
+  acroname=`head -n1 $HOME/bin/ff_acroname | tail -n1`
+  acro_file=$HOME/bin/ff_acrolist_dir/$acroname
 fi
 
+#echo $1 $2 $3 $acro_file
+#read x
 # save cmdline parms for later
 p1=$1                         # first parm
 if [ ".$2" == "." ]; then     # see if there is more than one parm
@@ -185,3 +185,5 @@ fi
 ech0 3 $cmd_action
 echo $cmd_action $filename
 $cmd_action $filename
+
+
