@@ -4,7 +4,7 @@
 # 1. script f1 for this to call  ( like f with acrolist  f1_acrolist
 # 2. file ~/bin/f1_acrolist   default
 # 3. file ~/bin/acrofile_name   holds the member-name across calls
-# 4. director ~/bin/ff_acrofile_dir  sub dir of acrolists
+# 4. director ~/bin/ff_acrolist_dir  sub dir of acrolists
 #
 
 usage() {
@@ -12,11 +12,12 @@ usage() {
 :: usage ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::  
 Name: ff  found in $0
 Description: driver for aternative-f routine where the acronym list
-  is set as a member of ~/bin/ff_acroname_dir/<member-name>
+  is set as a member of ~/bin/ff_acrolist_dir/<member-name>
+   
 parm
   null - shows this help information and current value of member-name.
   .    - enter the new acronym list file
-  on   - prompt(s) and set(s) the  ~/bin/ff_acronym_dir/ member-name
+  on   - prompt(s) and set(s) the  ~/bin/ff_acrolist_dir/ member-name
   off  - clear the member-name
   otherwise acts like f with up to three parms.
 
@@ -27,19 +28,22 @@ EOF
 
 if [ ".$1" == "." ]; then
   usage
-
   touch $HOME/bin/ff_acroname
+
 
   nl=`wc $HOME/bin/ff_acroname |  awk '{print $1}'`
 
-  acroname=""
+#  acroname=""
   if [ ".$nl" == ".0" ]; then
     echo "Current acrolist is ~/bin/ff_acrolist"
   else
     acroname=`head -n1 $HOME/bin/ff_acroname | tail -n1`
-    echo "$acroname - Current acrolist is ~/bin/ff_acroname_dir/$acroname"
+    echo "$acroname - Current acrolist is ~/bin/ff_acrolist_dir/$acroname"
   fi
 
+  echo "List of non-default current choices:"
+  ls ~/bin/ff_acrolist_dir
+  
   exit
 fi
 
@@ -51,7 +55,7 @@ fi
 if [ ".$p1" == ".OFF" ]; then 
   rm $HOME/bin/ff_acroname               # clear by deleting
   sleep 1
-  touch $HOME/bin/acrofile_name          # reallocate empty
+  touch $HOME/bin/ff_acrofile_name          # reallocate empty
 #  nl=`wc $HOME/bin/acrofile_name`
 #  echo  $nl $nl
   exit 
@@ -63,12 +67,14 @@ if [ ".$p1" == ".on" ]; then
 fi
 
 if [ ".$p1" == ".ON" ]; then 
-   echo -n "Enter the acroparm file name : "
+   echo -n "Enter the acrolist file name : "
    read answer   rest
-   acroparm=$answer  
-   echo $acroparm > $HOME/bin/ff_acroname
-   echo "Using 2>"$acroparm"< for acrofile member name."
-   cat $HOME/bin/ff_acroname
+   acroname=$answer  
+   echo $acroname > ~/bin/ff_acroname
+   echo "Using : "$acroname" for ff_acrofile_dir member name."
+   touch ~/bin/ff_acrolist_dir/$acroname
+   echo showing acroname
+   cat ~/bin/ff_acroname
    exit
 fi
 #echo acroparm is ">"$acroparm"<"

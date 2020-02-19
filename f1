@@ -1,19 +1,10 @@
 #!/bin/bash
 
-# debugging I left in the debugging echos but you can turn then on/off
-# to turn them on   from cmd line  enter   fdebug="ON"
-# to turn then back off   fdebug=    anything but ON
-# surround your desire echo debug by
+# debugging I left in the debugging echos but left off 
+# uncomment it to turn them on  BEFORE issuing ff  issue
+#   export fdebug=ON  
 
-# to turn then back off   fdebug=    anything but ON
-# surround your desire echo debug by
-
-
-#  if [ ".$fdebug" == ".ON" ]; then
-  # whaterever echo stmt you wish
-#  fi
-
-function ech0 () {               # set  debug=ON  export debug
+function ech0 () {               # debugging echo
   if [ ".$fdebug" == ".ON" ]; then
     echo $@
   fi  
@@ -30,11 +21,13 @@ function nop() {    # a NO-OP to make code more readable later
   return 0
 }
 
+ech0 debugging is turned on
 # the list of acronyms is 
 #  ff_acrolist  if  ~/bin/ff_acroname is empty
 #  ~/bin/ff_acroname_dir/member  if  ~/bin/ff_acroname contains member
 
 nl=`wc $HOME/bin/ff_acroname | awk '{print $1}'`
+ech0 $nl
 if [ ".$nl" == ".0" ]; then
   acro_file=$HOME/bin/ff_acrolist
 else
@@ -42,9 +35,6 @@ else
   acro_file=$HOME/bin/ff_acrolist_dir/$acroname
 fi
 
-#echo $1 $2 $3 $acro_file
-#read x
-# save cmdline parms for later
 p1=$1                         # first parm
 if [ ".$2" == "." ]; then     # see if there is more than one parm
 	p2=""                     # nope
@@ -72,7 +62,7 @@ if [ ".$p1" == "." ] ; then
 	echo "::   field1 acro  the acronym to search for      ::"
 	echo "::   field2 filename to act upon                 ::"
 	echo "::   field3 action to take  null  vim            ::"
-	echo "::    (more info in the acro file itself.)       ::"
+	echo "::    -more info in the acro file itself.-       ::"
 	echo ":::::::::::::::::::::::::::::::::::::::::::::::::::"
 	exit 
 fi
@@ -82,7 +72,6 @@ if [ ".$p1" == ".." ] ; then    # use  f .  to get to the acro file
 	vim $acro_file 
 	exit
 fi
-
 
 found="no"   
 
@@ -95,10 +84,7 @@ found="no"
 
 # while  read -r acro filename action rest ; do
 while  read -r acro filename a1 a2 a3 rest ; do
-
-#if [ ".$fdebug" == ".ON" ]; then
-ech0 acro $acro filename $filename a1 $a1 a2 $a2 a3 $a3 rest $rest
-#fi
+  ech0 acro $acro filename $filename a1 $a1 a2 $a2 a3 $a3 rest $rest
 
 #  if null-line skip it  (debug msg as null/blank line.)
 #     if char1 of acro is #  skip it  (debug msg as comment
@@ -127,8 +113,8 @@ if [ "." != ".$acro" ]; then             # null acro => blank line
         ech0 Built override by acro_lib"."$line_action"."
       else
         nop
-        ech0 ">>"$orig2"<<>>"$orig3"<<"
-        ech0 check for single sudo
+        echo "  "$orig2"  "$orig3""
+        echo check for single sudo
         if [ ".$orig2" == ".sudo" ] && [ ".$orig3" == "." ]; then 
           command_override="sudo vim "
         else
@@ -174,16 +160,14 @@ echo "acro:"$p1", filename:"$filename
 
 # Set the cmd_action value        
 cmd_action="vim "                      #  set the default
-ech0 1 $cmd_action  ">"$line_action"<"
+ech0 "1 $cmd_action  >"$line_action"<"
 if [ ".$line_action" != "." ]; then
   cmd_action=$line_action              # parm lib override
 fi
-ech0 2 $cmd_action
+ech0 "2 $cmd_action"
 if [ ".$command_override" != "." ]; then     # commandline override
   cmd_action=$command_override
 fi
-ech0 3 $cmd_action
+ech0 "3 $cmd_action"
 echo $cmd_action $filename
 $cmd_action $filename
-
-
