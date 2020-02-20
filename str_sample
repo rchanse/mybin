@@ -1,3 +1,4 @@
+
 #!/bin/bash 
 array=( apple bat cat dog elephant frog ) 
 #print first element 
@@ -19,3 +20,56 @@ echo ${#array[@]}
 #replacing substring 
 echo ${array[@]//a/A} 
 exit 0
+
+
+
+#!/usr/bin/env bash
+
+# set outside of exec by  export rchansen=ON
+function ech0() {
+  if [ ".$rchansen" == ".ON" ]; then
+    echo $@
+  fi
+}
+function exists() {
+if [ -a $1 ]; then
+  ech0 $1 EXISTs
+  return 0
+else
+  ech0 $1 Does NOT EXIST.
+  return 1
+fi
+}
+
+exists $1
+answer=$?
+
+echo $answer
+
+
+
+#!/usr/bin/env bash
+
+
+function showit() {
+cat <<EOF
+:: showit ::::::::::::::::::::::::::::::::::::::::::::::::::
+  line of constants
+  variable $x
+ 
+  $a
+  $b
+  $c
+  $d
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+EOF
+}
+
+x=333
+
+
+a=a_constant 
+b="for $x showit"
+c='for $x showit'
+d="for $x showit"
+showit
