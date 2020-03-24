@@ -19,15 +19,15 @@ function chk_dir(){
     fi
 }
 
-echo -n "Did you make the binbin fix? YyNn : "
+# echo -n "Did you make the binbin fix? YyNn : "
 
-read answer tail
-if [ ".$answer" == ".Y" ]; then   # cap Y  only
-    echo "Good for you."
-else
-    echo "search for binbin and fix it, then try again"
-    exit
-fi
+# read answer tail
+# if [ ".$answer" == ".Y" ]; then   # cap Y  only
+#     echo "Good for you."
+# else
+#     echo "search for binbin and fix it, then try again"
+#     exit
+# fi
 
 # purpose of this script is to take the mybin (or raspbin) directory
 # and put it in place for a new user  creates ~/bin dir (acually
@@ -71,12 +71,12 @@ if [ $chk_dir_cc != 0 ]; then
    mkdir .vim
 fi  
 
-chk_dir bin/ff_acroname_dir 1
+chk_dir bin/ff_acrolist_dir 1
 if [ $chk_dir_cc != 0 ]; then
 #  echo  "See above line,   I QUIT. (3)"
 #  exit
-   echo  mkdir bin/ff_acroname_dir
-   mkdir bin/ff_acroname_dir
+   echo  mkdir bin/ff_acrolist_dir
+   mkdir bin/ff_acrolist_dir
 fi  
 
 chk_dir g_acrolist_dir 1
