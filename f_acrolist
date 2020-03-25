@@ -1,75 +1,44 @@
-
-acronym       filename	         action to take  none/null = vim
-  tl  ~/templist
-  wf  ~/blp/learn2pgmC/wherefrom
-  bin12list ~/bin12oct16/bin12oct16list
-  v5       ~/pythonrch/learningpython.pdf xpdf
-  bind     ~/bin               ls -al
-  debug   ~/.de_bug
-  testing ~/testing
-  whoami  ~/whoami
-  progit /home/rchansen/gitstuff//progit-en.1084.pdf xpdf 
-  goto   ~/Documents/Dijkstra_Goto.pdf  evince
-  zellepdf /home/rchansen/python/zelle/zellepythonbook.pdf   xpdf
-  zellepdfe /home/rchansen/python/zelle/zellepythonbook.pdf   evince
-  .t        /home/rchansen/tmplist
-  apacheconf /etc/apache2/apache2.conf
-  apachedoc /usr/share/doc/apache2/README.Debian.gz
-  cdit      /home/rchansen/bin/cdit
-  cdit.     ~/.local/bin/cdit
-  complete /usr/share/bash-completion/bash_completion
-  colomine /home/rchansen/.vim/colors/mine.vim
-  colordoc /home/rchansen/.vim/colors/colordoc
-  colotest /home/rchansen/.vim/colors/test.vim
-  debref  /home/rchansen/Documents/Manuals/debian-reference.en.txt
-  dnsinfo  /etc/resolv.conf
-  dopw /var/www/html/doku2/data/pages/rch/passwords.txt
-  f        ~/bin/f
-  f$       /home/rchansen/bin/f
-  f+        /home/rchansen/bin12oct16/f
-  fold       ~/bin/fold
-  fold       /home/rchansen/bin/fold
-  ftpconf  /etc/vsftpd.conf   sudo vim
-  g        /home/rchansen/bin/g                           
-  gitman ~/git-projects/gitsrc/Documentation/user-manual.txt
-  g12      ~/bin12oct16/g                           
-  grubdoc  /usr/share/info/grub.info.gz      
-  hostname /etc/hostname
-  hosts    /etc/hosts
-  idle     /usr/lib/python2.7/idlelib/idle.py  less
-  grpy     /home/rchansen/python/zelle/rchansen/graphics.py
-  grp     /home/rchansen/python/zelle/$USER/graphics.py
-  binmovelog ~/binmove.log
-  bml     ~/binmove.log
-  knr     ~/Documents/knr.pdf   evince
-  knrpdf    ~/Documents/knr.pdf   xpdf
-  learnpy  ~/pythonrch/learningpython.pdf xpdf  
-  learnpy  ~/pycode/learningpython.pdf evince
-  mcini   /home/rchansen/.config/mc/ini                 
-  netif    /etc/network/interfaces  
-  phonedoc ~/Documents/Manuals/ATT_Z222.pdf  evince
-  pysyn    /usr/share/vim/vim74/syntax/python.vim
-  pdbdoc   /usr/lib/python2.7/pdb.doc
-  theodoro  /home/rchansen/tn/Theodoro
-  stdio    /usr/include/stdio.h
-  stdlib   /usr/include/stdlib.h
-  stringh  /usr/include/string.h
-  tempname ~/tempname
-  tn       ~/tempname
-  timeit   ~/timeit_log
-  tiprch   /home/rchansen/python/books/ThinkinPython
-  Tkinter  /usr/lib/python2.7/lib-tk/Tkinter.py
-  tmplist  /home/rchansen/tmplist              
-  tmplst  /home/rchansen/tmplst              
-  turtle   /usr/lib/python2.7/lib-tk/turtle.py
-  uservbox ~/Downloads/virtualbox/UserManual.pdf   xpdf
-  vbox ~/vbox/UserManual.pdf   xpdf
-  vimbook /home/rchansen/Documents/books/vimbook-OPL.pdf  xpdf
-  vimbook1 /home/rchansen/Documents/books/vimbook-OPL.pdf  evince
-  vimrc    ~/.vimrc
-  vimrc    /home/rchansen/.vimrc
-  vimsyn   /usr/share/vim/vim74/syntax/syntax.vim
-  whatis   /home/rchansen/bin/whatis 
-  zelle   /home/rchansen/python/zelle/rchansen 
-  zellepage   /home/rchansen/python/zelle/rchansen/page 
-thinkpy /home/rchansen/Documents/Manuals/thinkpython.pdf evince
+#
+#  0  acronym  filename	 action-to-take   of none/null = vim
+#  1. pound in col 1 is comment
+#  2. make a copy of 'Op .... .pdf' so atril can find it
+#  3. ostep ~/'Operating Systems - Three Easy Pieces.pdf'  atril
+#  4. to see debug aids precede f-cmd with  export debug="ON"
+#  5. to insure edit  use   acro filename  sudo vim    
+#  6. :sort  will 'sort' this file
+.t        /home/rchansen/tmplist
+cdit      /home/rchansen/bin/cdit
+colomine ~/.vim/colors/mine.vim
+colomine /home/rchansen/.vim/colors/mine.vim
+colordoc /home/rchansen/.vim/colors/colordoc
+colotest /home/rchansen/.vim/colors/test.vim
+complete /usr/share/bash-completion/bash_completion
+dnsinfo  /etc/resolv.conf
+f        ~/bin/f
+f$       /home/rchansen/bin/f
+g        /home/rchansen/bin/g                           
+hostname /etc/hostname
+hosts    /etc/hosts  sudo vim
+idle     /usr/lib/python2.7/idlelib/idle.py  less
+knr     ~/Documents/knr.pdf   atril
+knrpdf    ~/Documents/knr.pdf   xpdf
+learnpy  ~/pycode/learningpython.pdf atril
+learnpy  ~/pythonrch/learningpython.pdf xpdf  
+mcini   /home/rchansen/.config/mc/ini                 
+netif    /etc/network/interfaces  
+ostep    ~/xv6-notes/ostep.pdf  atril
+pdbdoc   /usr/lib/python2.7/pdb.doc
+progit /home/rchansen/gitstuff//progit-en.1084.pdf xpdf 
+stdio    /usr/include/stdio.h
+stdlib   /usr/include/stdlib.h
+stringh  /usr/include/string.h
+t       tempname
+tempname ~/tempname
+thinkpy /home/rchansen/Documents/Manuals/thinkpython.pdf atril
+vimrc    /home/rchansen/.vimrc
+vimrc    ~/.vimrc
+whatis   /home/rchansen/bin/whatis 
+whoami  ~/whoami
+wp    /usr/share/wordpress/wp-config.php
+xv6   ~/bin/ff_acrolist_dir/xv6
+zelle   /home/rchansen/python/zelle/rchansen 
