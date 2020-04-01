@@ -1,0 +1,30 @@
+# gotten from  192.168.1.254 screen
+#
+#
+127.0.0.1    localhost
+127.0.0.1    btnhd.com
+192.168.1.71  testa.com
+192.168.1.71  testb.com
+192.168.1.71  port81.com
+192.168.1.71  rchdoku.com 
+192.168.1.71  Xubuntu-18.04.com
+
+#
+# on my network check 192.168.1.254  Sun 24 Mar 2019 01:37:19 PM CDT
+#
+192.168.1.65  slack slack140
+192.168.1.71  Think Xubuntu-18 Xub me
+192.168.1.64  dellopt
+192.168.1.68  mynet
+192.168.1.69  raspberrypi bigpi pi
+192.168.1.226 bigberry
+192.168.1.228  bigarch
+#192.168.1.69  bigberry
+192.168.1.180 book BN.rch bn BN
+192.168.1.202 dell64            
+
+# for kali on small rasp
+# 
+# https://tutorialinux.com/git-setting-personal-git-repository/
+192.168.1.187 kali.com
+
