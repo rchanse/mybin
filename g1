@@ -1,3 +1,9 @@
+function ech0 () {               # debugging echo
+  if [ ".$ech0" == ".ON" ]; then
+    echo $@
+  fi  
+}
+
 #!/bin/bash
 
 #Set default values
@@ -6,9 +12,9 @@ let count=$#
 
 NAMES_list=$HOME/bin/g1_acrolist  # non-root file with list of names
 
-has_acrolist=$HOME/bin/g_acroname
+has_acrolist=$HOME/bin/gg_acroname
 
-echo xxxx $has_acrolist
+ech0 xxxx $has_acrolist
 
 nl=`wc $has_acrolist | awk '{print $1}'`
 
@@ -17,8 +23,8 @@ if [ ".$nl" == ".0" ]; then
   echo use default $NAMES_list
 else
   acroname=`head -n1 $has_acrolist | tail -n1`
-  echo Use $acroname in $HOME/bin"/g_acrolist_dir"
-  NAMES_list=$HOME/bin/g_acrolist_dir/$acroname
+  ech0 Use $acroname in $HOME/bin"/gg_acrolist_dir"
+  NAMES_list=$HOME/bin/gg_acrolist_dir/$acroname
 fi
 
 if [ -f $NAMES_list ]; then
@@ -171,4 +177,5 @@ fi
   ;;
 esac
 exit 0
+
 
