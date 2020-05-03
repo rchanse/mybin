@@ -72,6 +72,7 @@ map <c-r> :set rnu!
 set showbreak='..>'    " sbr
 " suggestion for python
 set textwidth=79  " tw  lines longer thatn 79 will be broken
+set colorcolumn=-3
 set shiftwidth=4  " sw  operation >> indents 4 col << unindents 4 col
 set tabstop=4     " ts  hard TAB displays 4 col
 set expandtab     " et  inserts spaces when hitting TABs
@@ -188,3 +189,12 @@ endfunction
 map FF :call Fit("")<left><left>
 
 
+nnoremap <Left>  :echoe "Use h"<CR>
+nnoremap <Right> :echoe "Use l"<CR>
+nnoremap <Up>    :echoe "Use k"<CR>
+nnoremap <Down>  :echoe "Use j"<CR>
+" ...and in insert mode
+inoremap <Left>  <ESC>:echoe "Use h"<CR>
+inoremap <Right> <ESC>:echoe "Use l"<CR>
+inoremap <Up>    <ESC>:echoe "Use k"<CR>
+inoremap <Down>  <ESC>:echoe "Use j"<CR>
