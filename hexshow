@@ -45,7 +45,7 @@ def hexplode(x):          # convert char to hex display
   
 # subrtn to receive a char and limit output to printable or blank
 def charshow(x):
-  print_most = string.letters + string.digits + string.punctuation
+  print_most = string.letters + string.digits + string.punctuation + " "
   if x in print_most:    # string.printable - string.whitespace:
     return x
   else:
