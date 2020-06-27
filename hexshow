@@ -30,10 +30,15 @@ in_parm3 = "prompt"
 # os must be imported
 # export rchdebug=ON     to turn it on
 def pront(x):
-    if os.environ["rchdebug"]== "ON":
-        print x
-
-
+    try:
+        testval = os.environ["rchdebug"]
+        if (testval == "ON"):
+            print x            # this is goo
+#       else:
+#            do nothing
+    except (KeyError) as e:
+#       print 'os.environ["rchdebug"] not found.'
+        pass
 
 
 def hexplode(x):          # convert char to hex display
@@ -89,6 +94,7 @@ if len(sys.argv) >= 4:
 
 if len(sys.argv) != 4:
     print "You may use the parm version or the prompt version."
+    print "Debuging is available by  export rchdebug=ON       "
     print "parm1  input source  1 - screen, 2 - file "
     print "parm2  filename if parm1 is 2 "
     print "parm3  output source 1 - screen, 2 - file, 3 - both."
