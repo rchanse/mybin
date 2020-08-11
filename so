@@ -156,6 +156,9 @@ fi
 if [ -f ~/.vimrc  ]; then
    cp -v  ~/.vimrc               $HOME/$newdir/.vimrc
 fi   
+if [ -f ~/.nanorc ]; then 
+   cp -v  ~/.nanorc              $HOME/$newdir/.nanorc
+fi   
 if [ -f ~/.vim/FF_acrolist ]; then
    cp -v  ~/.vim/FF_acrolist     $HOME/$newdir/.FF_acrolist
 fi   
@@ -174,6 +177,7 @@ echo "got past copy-ing nonbin files to backupbin":
    mv -v   $HOME/bin/.bashrc         ~/.bashrc
    mv -v   $HOME/bin/.bash_aliases   ~/.bash_aliases
    mv -v   $HOME/bin/.vimrc          ~/.vimrc
+   mv -v   $HOME/bin/.nanorc         ~/.nanorc
    mv -v   $HOME/bin/FF_acrolist     ~/.vim/FF_acrolist 
    mv -v   $HOME/bin/mine.vim        ~/.vim/colors/mine.vim
    cp -v   $HOME/mybin/.bashrc       ~/bin/.bashrc
