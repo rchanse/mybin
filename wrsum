@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# insure scratch/work file exist
+filecheck () {
+if [ -f $1  ]; then
+    echo "Exists before filecheck: "$1
+else
+    touch $1 
+    echo "Touch and created      : "$1
+fi
+}
+
+if [ ".$1" == ".-clean" ]; then
+    rm -iv 11asummary 
+    rm -v 11asummary.out rchtemp rchtemp2
+    exit
+fi
+filecheck 11asummary
+filecheck 11asummary.out
+filecheck rchtemp
+filecheck rchtemp2
+# exit           # testing termination
+
+ls > rchtemp
+file_input=11asummary
+cat $file_input rchtemp > rchtemp2       
+echo "here"
+file_output=11asummary.out
+echo "#member      description" > 11asummary.out
+
+let lineno=2     # add 1 for header:
+
+while  read -r filename dash  rest ; do
+# echo "<>:"$filename"<>"$dash"<>"
+  fill=""
+  newline=""
+  len_filename=${#filename}
+  let extra_blank_count=8-$len_filename
+  if [ $extra_blank_count -ge 0 ]; then
+    star="           "
+    fill=${star:0:$extra_blank_count}
+#   echo "<$fill>"
+  fi
+  newline="$filename$fill $dash $rest "
+  if [ ".-" == ".$dash" ]; then
+    echo $newline
+    echo "$newline"  >> 11asummary.out
+    let lineno=$lineno+1
+  fi
+
+  if [ "$filename" == "$1" ]; then
+    echo "$newline"  >> 11asummary.out
+    let findline=$lineno
+  fi
+done < rchtemp2            # end read loop from given file_input
+
+
+echo vim +$findline 11asummary.out
+vim +$findline 11asummary.out
+
+echo -e "Hit Enter to rewrite 11asummary "
+read value
+if [ ".$value" == "." ]; then
+  cp 11asummary.out 11asummary
+  echo "l1asummary refreshed from 11asummary.out"
+else
+  echo "11asummary not touched"
+fi
+
